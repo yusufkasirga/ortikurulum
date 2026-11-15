@@ -20,15 +20,21 @@ import Sohbet from './screens/Sohbet';
 import Olustur from './screens/Olustur';
 import Degerlendir from './screens/Degerlendir';
 import Sikayet from './screens/Sikayet';
+import Harita from './screens/Harita';
+import Mekan from './screens/Mekan';
+import Dogrulama from './screens/Dogrulama';
 
-export type TabParams = { Kesfet: undefined; Masalarim: undefined; Ekle: undefined; Sohbetler: undefined; Profil: undefined };
+export type TabParams = { Kesfet: undefined; Harita: undefined; Ekle: undefined; Sohbetler: undefined; Profil: undefined };
 export type RootParams = {
   Hosgeldin: undefined;
   Tabs: NavigatorScreenParams<TabParams> | undefined;
   HizliEsles: undefined;
-  Lobi: { id?: string } | undefined;
+  Lobi: { id?: string; venueId?: string; tableId?: string } | undefined;
   Sohbet: undefined;
-  Olustur: undefined;
+  Olustur: { venueId?: string; audience?: 'karma' | 'kadin' | 'erkek' } | undefined;
+  Mekan: { id: string };
+  Dogrulama: { then?: 'olustur'; venueId?: string } | undefined;
+  Masalarim: undefined;
   Degerlendir: undefined;
   Sikayet: { name?: string } | undefined;
 };
@@ -41,7 +47,7 @@ const Empty = () => null;
 
 const TAB_META: Record<keyof TabParams, { icon: IconName; label: string }> = {
   Kesfet: { icon: 'compass', label: 'Keşfet' },
-  Masalarim: { icon: 'table', label: 'Masalarım' },
+  Harita: { icon: 'map', label: 'Harita' },
   Ekle: { icon: 'plus', label: 'Masa aç' },
   Sohbetler: { icon: 'chat', label: 'Sohbet' },
   Profil: { icon: 'person', label: 'Profil' },
@@ -110,7 +116,7 @@ function Tabs() {
   return (
     <Tab.Navigator tabBar={(p) => <TabBar {...p} />} screenOptions={{ headerShown: false }}>
       <Tab.Screen name="Kesfet" component={Kesfet} />
-      <Tab.Screen name="Masalarim" component={Masalarim} />
+      <Tab.Screen name="Harita" component={Harita} />
       <Tab.Screen name="Ekle" component={Empty} listeners={{ tabPress: (e) => { e.preventDefault(); tapMedium(); } }} />
       <Tab.Screen name="Sohbetler" component={Sohbetler} />
       <Tab.Screen name="Profil" component={Profil} />
@@ -132,6 +138,9 @@ export default function RootNavigation() {
         <Stack.Screen name="Degerlendir" component={Degerlendir} options={{ gestureEnabled: false }} />
         <Stack.Screen name="Olustur" component={Olustur} options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
         <Stack.Screen name="Sikayet" component={Sikayet} options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+        <Stack.Screen name="Dogrulama" component={Dogrulama} options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+        <Stack.Screen name="Mekan" component={Mekan} />
+        <Stack.Screen name="Masalarim" component={Masalarim} />
       </Stack.Navigator>
     </NavigationContainer>
   );

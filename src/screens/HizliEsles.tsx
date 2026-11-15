@@ -111,7 +111,7 @@ export default function HizliEsles({ navigation }: ScreenProps<'HizliEsles'>) {
                 <GameTile mark="O" bg="#1F8A4C" size={56} />
                 <View style={{ gap: 2 }}>
                   <T w="b" size={20}>101 Okey</T>
-                  <T size={14} color={C.text2}>Moda Kahvesi · 0,8 km · Partner mekan</T>
+                  <T size={14} color={C.text2}>Arena Premium Okey · Mevlana · Partner</T>
                 </View>
               </View>
               <View style={{ flexDirection: 'row', gap: 8 }}>
@@ -128,12 +128,12 @@ export default function HizliEsles({ navigation }: ScreenProps<'HizliEsles'>) {
                 <T size={14} color={C.text3} style={{ flex: 1 }}>Ortalama puan 4,8 · Hepsi doğrulanmış</T>
               </View>
               <View style={styles.why}>
-                <T size={14} color={C.tintText} style={{ lineHeight: 20 }}>Neden bu masa? Okey seçtin, 1 km içinde ve kurucunun güven skoru 98.</T>
+                <T size={14} color={C.tintText} style={{ lineHeight: 20 }}>Neden bu masa? Okey seçtin, kampüse 1,5 km ve kurucunun güven skoru 98.</T>
               </View>
             </View>
           </ScrollView>
           <View style={[styles.footer, { paddingBottom: insets.bottom + 10, gap: 6 }]}>
-            <PrimaryButton title="Masaya otur" onPress={() => navigation.replace('Lobi', { id: 'okey' })} />
+            <PrimaryButton title="Masaya otur" onPress={() => navigation.replace('Lobi', { venueId: 'arena', tableId: 't1' })} />
             <Tap onPress={() => setStage('search')} style={{ height: 44, alignItems: 'center', justifyContent: 'center' }}>
               <T w="s" size={16} color={C.primary}>Başka masa göster</T>
             </Tap>

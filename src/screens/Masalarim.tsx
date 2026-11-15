@@ -1,27 +1,28 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { C } from '../theme';
 import Icon from '../components/Icon';
 import { Card, GameTile, SectionLabel, Sep, T, Tap } from '../components/ui';
-import type { TabParams } from '../navigation';
+import type { ScreenProps } from '../navigation';
+import { NavBack } from '../components/ui';
 
-export default function Masalarim({ navigation }: BottomTabScreenProps<TabParams, 'Masalarim'>) {
+export default function Masalarim({ navigation }: ScreenProps<'Masalarim'>) {
   const insets = useSafeAreaInsets();
-  const root = navigation.getParent();
+  const root = navigation;
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={{ paddingTop: insets.top + 8, paddingHorizontal: 20, paddingBottom: 120, gap: 18 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={{ paddingTop: insets.top + 4, paddingHorizontal: 20, paddingBottom: 60, gap: 18 }}>
+      <View style={{ marginLeft: -8 }}><NavBack label="Profil" onPress={() => navigation.goBack()} /></View>
       <T w="x" size={34} style={{ letterSpacing: -0.8 }} accessibilityRole="header">Masalarım</T>
 
       <View style={{ gap: 8 }}>
         <SectionLabel>Yaklaşan</SectionLabel>
-        <Tap onPress={() => root?.navigate('Sohbet')} style={styles.upcoming}>
+        <Tap onPress={() => root.navigate('Sohbet')} style={styles.upcoming}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
             <GameTile mark="O" bg="#1F8A4C" size={52} />
             <View style={{ flex: 1, gap: 2 }}>
               <T w="b" size={18}>101 Okey</T>
-              <T size={14} color={C.text2}>Moda Kahvesi · Bugün 21:30</T>
+              <T size={14} color={C.text2}>Arena Premium Okey · Bugün 21:30</T>
             </View>
             <View style={styles.ok}><T w="s" size={12} color={C.green}>Onaylandı</T></View>
           </View>
@@ -36,11 +37,11 @@ export default function Masalarim({ navigation }: BottomTabScreenProps<TabParams
       <View style={{ gap: 8 }}>
         <SectionLabel>Puan bekleyen</SectionLabel>
         <Card>
-          <Tap onPress={() => root?.navigate('Degerlendir')} style={styles.row}>
-            <GameTile mark="T" bg="#8A5A2B" size={40} />
+          <Tap onPress={() => root.navigate('Degerlendir')} style={styles.row}>
+            <GameTile mark="K" bg="#A35200" size={40} />
             <View style={{ flex: 1 }}>
-              <T w="s" size={16}>Tavla</T>
-              <T size={13} color={C.text2}>Çınaraltı · Dün</T>
+              <T w="s" size={16}>Catan</T>
+              <T size={13} color={C.text2}>Latibule Coffee · Dün</T>
             </View>
             <T w="s" size={15} color={C.primary}>Puanla</T>
           </Tap>

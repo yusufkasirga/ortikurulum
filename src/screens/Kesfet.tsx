@@ -4,23 +4,25 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { C } from '../theme';
 import Icon from '../components/Icon';
-import { Avatar, GameTile, Logo, T, Tap } from '../components/ui';
-import { LOBBIES, Lobby } from '../data';
+import { Avatar, Logo, T, Tap } from '../components/ui';
+import { CAT_META, OpenTable, Venue, VENUES, VenueCat, distanceKm, fmtKm } from '../venues';
 import type { TabParams } from '../navigation';
 
-type Cat = 'all' | 'masa' | 'online' | 'spor';
-const CATS: { id: Cat; label: string }[] = [
-  { id: 'all', label: 'Tümü' },
-  { id: 'masa', label: 'Masa oyunları' },
-  { id: 'online', label: 'Online' },
-  { id: 'spor', label: 'Spor' },
+type Cat = 'all' | 'masa' | 'ps' | 'spor';
+const CATS: { id: Cat; label: string; cats: VenueCat[] }[] = [
+  { id: 'all', label: 'Tümü', cats: [] },
+  { id: 'masa', label: 'Okey · masa oyunu', cats: ['okey', 'kafe', 'bilardo'] },
+  { id: 'ps', label: 'PlayStation · e-spor', cats: ['playstation'] },
+  { id: 'spor', label: 'Halı saha · bowling', cats: ['halisaha', 'bowling'] },
 ];
+const ALL = VENUES.flatMap((v) => v.tables.map((t) => ({ v, t })));
 
 export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, 'Kesfet'>) {
   const insets = useSafeAreaInsets();
   const [cat, setCat] = React.useState<Cat>('all');
   const root = navigation.getParent();
-  const list = cat === 'all' ? LOBBIES : LOBBIES.filter((l) => l.type === cat);
+  const sel = CATS.find((c) => c.id === cat)!;
+  const list = cat === 'all' ? ALL : ALL.filter(({ v }) => sel.cats.includes(v.cat));
 
   return (
     <ScrollView
@@ -47,7 +49,7 @@ export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, '
         <T w="x" size={34} style={{ letterSpacing: -0.8 }} accessibilityRole="header">Keşfet</T>
         <Tap style={{ flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', minHeight: 28 }}>
           <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: C.greenDot }} />
-          <T w="m" size={15} color={C.text2}>Kadıköy çevresinde 23 açık masa</T>
+          <T w="m" size={15} color={C.text2}>Talas · ERÜ çevresinde {ALL.length} açık masa</T>
           <Icon name="chevDown" size={12} color={C.text2} strokeWidth={2.6} />
         </Tap>
       </View>
@@ -73,10 +75,19 @@ export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, '
         })}
       </ScrollView>
 
+      <Tap onPress={() => navigation.navigate('Harita')} style={styles.mapCard}>
+        <View style={styles.mapIcon}><Icon name="map" color={C.primary} size={24} /></View>
+        <View style={{ flex: 1 }}>
+          <T w="s" size={16}>Haritada gör</T>
+          <T size={13} color={C.text2}>{VENUES.length} mekan · okey, PlayStation, bilardo, halı saha</T>
+        </View>
+        <Icon name="chevRight" color={C.chevron} size={14} strokeWidth={3} />
+      </Tap>
+
       <T w="b" size={22} style={{ letterSpacing: -0.4 }} accessibilityRole="header">Yakınındaki eksikler</T>
 
       <View style={{ gap: 12 }}>
-        {list.map((l) => <LobbyCard key={l.id} l={l} onPress={() => root?.navigate('Lobi', { id: l.id })} />)}
+        {list.map(({ v, t }) => <LobbyCard key={t.id} v={v} t={t} onPress={() => root?.navigate('Lobi', { venueId: v.id, tableId: t.id })} />)}
         {list.length === 0 ? (
           <View style={styles.empty}>
             <T w="s" size={16}>Şu an bu kategoride eksik yok</T>
@@ -91,37 +102,44 @@ export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, '
   );
 }
 
-function LobbyCard({ l, onPress }: { l: Lobby; onPress: () => void }) {
+const AV = ['#FFD8B5', '#CFE3FF', '#D3F0DA', '#E8DAFF', '#FFE3E8', '#FFF1C2'];
+
+function LobbyCard({ v, t, onPress }: { v: Venue; t: OpenTable; onPress: () => void }) {
+  const meta = CAT_META[v.cat];
+  const seated = t.total - t.need;
+  const urgent = /dk sonra|Şimdi/.test(t.time);
   return (
-    <Tap onPress={onPress} style={styles.card} accessibilityLabel={`${l.game}, ${l.place}, ${l.need}, ${l.time}`}>
+    <Tap onPress={onPress} style={styles.card} accessibilityLabel={`${t.game}, ${v.name}, ${t.need} kişi aranıyor, ${t.time}`}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-        <GameTile mark={l.mark} bg={l.tileBg} />
+        <View style={[styles.tile, { backgroundColor: meta.color }]}><Icon name={meta.icon} color="#FFF" size={24} strokeWidth={2} /></View>
         <View style={{ flex: 1, gap: 2 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-            <T w="s" size={17}>{l.game}</T>
-            {l.partner ? <View style={styles.partner}><T w="b" size={10} color={C.tintText}>PARTNER</T></View> : null}
+            <T w="s" size={17} numberOfLines={1} style={{ flexShrink: 1 }}>{t.game}</T>
+            {t.womenOnly ? <View style={styles.women}><T w="b" size={10} color="#8A1C5C">KADIN</T></View> : null}
           </View>
-          <T size={13} color={C.text2} numberOfLines={1}>{l.place}</T>
+          <T size={13} color={C.text2} numberOfLines={1}>{v.name}</T>
         </View>
-        <T size={13} color={C.text2}>{l.dist}</T>
+        <T size={13} color={C.text2}>{fmtKm(distanceKm(v.lat, v.lng))}</T>
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          {l.players.map((p, idx) => (
-            <View key={p.i} style={{ marginLeft: idx === 0 ? 0 : -8 }}><Avatar i={p.i} bg={p.bg} size={32} border /></View>
+          {Array.from({ length: Math.min(seated, 4) }).map((_, idx) => (
+            <View key={idx} style={{ marginLeft: idx === 0 ? 0 : -8 }}><Avatar i={idx === 0 ? t.host.split(' ').map((x) => x[0]).join('') : '•'} bg={AV[idx % AV.length]} size={32} border /></View>
           ))}
-          {Array.from({ length: l.empty }).map((_, idx) => (
-            <View key={idx} style={[styles.emptySeat, { marginLeft: idx === 0 ? 8 : 4 }]}><T size={16} color={C.text2}>+</T></View>
+          {seated > 4 ? <T size={12} color={C.text2} style={{ marginLeft: 6 }}>+{seated - 4}</T> : null}
+          {Array.from({ length: Math.min(t.need, 3) }).map((_, idx) => (
+            <View key={`e${idx}`} style={[styles.emptySeat, { marginLeft: idx === 0 ? 8 : 4 }]}><T size={16} color={C.text2}>+</T></View>
           ))}
         </View>
         <View style={{ alignItems: 'flex-end', gap: 4 }}>
-          <View style={styles.need}><T w="s" size={12} color={C.tintText}>{l.need}</T></View>
-          <T w="s" size={13} color={l.urgent ? C.urgent : C.text3}>{l.time}</T>
+          <View style={styles.need}><T w="s" size={12} color={C.tintText}>{t.need} kişi aranıyor</T></View>
+          <T w="s" size={13} color={urgent ? C.urgent : C.text3}>{t.time}</T>
         </View>
       </View>
       <View style={styles.hostRow}>
         <Icon name="shield" size={14} color={C.green} strokeWidth={2.4} />
-        <T size={13} color={C.text3}>{l.host}</T>
+        <T size={13} color={C.text3} style={{ flex: 1 }} numberOfLines={1}>Kurucu {t.host} · Güven {t.hostTrust}</T>
+        {v.smoking.value === 'kapali-serbest' ? <Icon name="smoke" size={15} color={C.text2} /> : null}
       </View>
     </Tap>
   );
@@ -138,6 +156,10 @@ const styles = StyleSheet.create({
   heroIcon: { width: 48, height: 48, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.18)', alignItems: 'center', justifyContent: 'center' },
   cat: { height: 36, paddingHorizontal: 16, borderRadius: 999, alignItems: 'center', justifyContent: 'center' },
   card: { backgroundColor: '#FFFFFF', borderRadius: 22, padding: 16, gap: 14 },
+  tile: { width: 48, height: 48, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
+  women: { backgroundColor: '#FDE7F1', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6 },
+  mapCard: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: '#FFFFFF', borderRadius: 18, padding: 14 },
+  mapIcon: { width: 44, height: 44, borderRadius: 12, backgroundColor: C.tint, alignItems: 'center', justifyContent: 'center' },
   partner: { backgroundColor: C.tint, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6 },
   emptySeat: { width: 28, height: 28, borderRadius: 14, borderWidth: 2, borderStyle: 'dashed', borderColor: C.gray, alignItems: 'center', justifyContent: 'center' },
   need: { backgroundColor: C.tint, paddingHorizontal: 9, paddingVertical: 4, borderRadius: 8 },

@@ -9,6 +9,7 @@ import { Inter_600SemiBold } from '@expo-google-fonts/inter/600SemiBold';
 import { Inter_700Bold } from '@expo-google-fonts/inter/700Bold';
 import { Inter_800ExtraBold } from '@expo-google-fonts/inter/800ExtraBold';
 import RootNavigation from './src/navigation';
+import { SessionProvider } from './src/store';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -23,8 +24,10 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <StatusBar style="dark" />
-      <RootNavigation />
+      <SessionProvider>
+        <StatusBar style="dark" />
+        <RootNavigation />
+      </SessionProvider>
     </SafeAreaProvider>
   );
 }

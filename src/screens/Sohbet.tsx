@@ -13,7 +13,7 @@ type Msg =
 
 const INITIAL: Msg[] = [
   { id: '1', kind: 'sys', text: 'Deniz masaya katıldı' },
-  { id: '2', kind: 'other', i: 'MK', bg: '#FFD8B5', name: 'Mehmet K.', text: 'Hoş geldin Deniz! Cam kenarındaki büyük masadayız.' },
+  { id: '2', kind: 'other', i: 'MK', bg: '#FFD8B5', name: 'Mehmet K.', text: 'Hoş geldin Deniz! Arena’da girişin solundaki akıllı masadayız.' },
   { id: '3', kind: 'other', i: 'EA', bg: '#CFE3FF', name: 'Elif A.', text: 'Ben 5 dk gecikebilirim, taşları dizin.' },
   { id: '4', kind: 'mine', text: 'Tamamdır, ben de yoldayım.' },
   { id: '5', kind: 'sys', text: 'Mehmet ve Elif check-in yaptı' },
@@ -49,10 +49,10 @@ export default function Sohbet({ navigation }: ScreenProps<'Sohbet'>) {
         </Tap>
         <GameTile mark="O" bg="#1F8A4C" size={38} />
         <View style={{ flex: 1 }}>
-          <T w="s" size={16}>101 Okey · Moda</T>
+          <T w="s" size={16}>101 Okey · Arena</T>
           <T size={13} color={C.text2}>4 kişi · Bugün 21:30</T>
         </View>
-        <Tap accessibilityLabel="Masa bilgisi" onPress={() => navigation.navigate('Lobi', { id: 'okey' })} style={styles.iconBtn}>
+        <Tap accessibilityLabel="Masa bilgisi" onPress={() => navigation.navigate('Lobi', { venueId: 'arena', tableId: 't1' })} style={styles.iconBtn}>
           <Icon name="info" color={C.primary} size={22} />
         </Tap>
       </View>

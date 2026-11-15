@@ -7,9 +7,9 @@ import { Card, GameTile, Sep, T, Tap } from '../components/ui';
 import type { TabParams } from '../navigation';
 
 const CHATS = [
-  { id: 'okey', mark: 'O', bg: '#1F8A4C', title: '101 Okey · Moda', last: 'Elif: Ben 5 dk gecikebilirim, taşları dizin.', time: '20:58', unread: 2 },
+  { id: 'okey', mark: 'O', bg: '#1F8A4C', title: '101 Okey · Arena', last: 'Elif: Ben 5 dk gecikebilirim, taşları dizin.', time: '20:58', unread: 2 },
   { id: 'val', mark: 'V', bg: '#C8243C', title: 'Valorant · Rekabetçi', last: 'Burak: Cuma 22:00 herkes uygun mu?', time: 'Dün', unread: 0 },
-  { id: 'saha', mark: 'H', bg: '#C25E00', title: 'Halı saha · 7v7', last: 'Ali: Kaleci arıyoruz, bilen var mı?', time: 'Pzt', unread: 0 },
+  { id: 'saha', mark: 'H', bg: '#C25E00', title: 'Halı saha · 7v7', last: 'Ali: Gezegen’de yarın 20:00, kaleci lazım', time: 'Pzt', unread: 0 },
 ];
 
 export default function Sohbetler({ navigation }: BottomTabScreenProps<TabParams, 'Sohbetler'>) {

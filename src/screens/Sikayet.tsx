@@ -52,7 +52,7 @@ export default function Sikayet({ navigation, route }: ScreenProps<'Sikayet'>) {
           <Avatar i={name.split(' ').map((x) => x[0]).join('').slice(0, 2)} bg="#D3F0DA" size={44} />
           <View>
             <T w="s" size={17}>{name}</T>
-            <T size={13} color={C.text2}>101 Okey · Moda Kahvesi · Bugün</T>
+            <T size={13} color={C.text2}>101 Okey · Arena Kahvesi · Bugün</T>
           </View>
         </Card>
 

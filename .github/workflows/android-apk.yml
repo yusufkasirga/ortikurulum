@@ -21,6 +21,8 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
       - run: npm ci
       - run: npx expo prebuild --platform android --no-install
+        env:
+          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
       - name: Build release APK
         working-directory: android
         run: ./gradlew assembleRelease --no-daemon

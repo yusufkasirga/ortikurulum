@@ -6,6 +6,9 @@ import { C } from '../theme';
 import Icon from '../components/Icon';
 import { Avatar, Card, GameTile, Segmented, Sep, T, Tap } from '../components/ui';
 import { RECENT_GAMES } from '../data';
+import { useSession } from '../store';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { TabParams } from '../navigation';
 
 const PRAISE = [
   { label: 'Centilmen', count: 41 },
@@ -16,8 +19,10 @@ const PRAISE = [
 const TRUST = 96;
 const CIRC = 2 * Math.PI * 34;
 
-export default function Profil() {
+export default function Profil({ navigation }: BottomTabScreenProps<TabParams, 'Profil'>) {
   const insets = useSafeAreaInsets();
+  const { verification } = useSession();
+  const root = navigation.getParent();
   const [tab, setTab] = React.useState<'praise' | 'games'>('praise');
   return (
     <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={{ paddingTop: insets.top + 8, paddingHorizontal: 20, paddingBottom: 120, gap: 18 }}>
@@ -30,7 +35,7 @@ export default function Profil() {
         <Avatar i="DA" bg={C.tint2} size={80} />
         <View style={{ gap: 4, flex: 1 }}>
           <T w="x" size={24} style={{ letterSpacing: -0.5 }}>Deniz Aydın</T>
-          <T size={15} color={C.text2}>Kadıköy · 2025'ten beri</T>
+          <T size={15} color={C.text2}>ERÜ · Talas · 2025'ten beri</T>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
             <Icon name="star" size={15} color={C.orange} fill={C.orange} strokeWidth={1} />
             <T w="s" size={15}>4,8</T>
@@ -64,15 +69,36 @@ export default function Profil() {
       </View>
 
       <Card>
-        {[['Telefon', true], ['Selfie doğrulama', true], ['Kimlik (isteğe bağlı)', false]].map(([k, ok], idx) => (
-          <View key={String(k)}>
-            {idx > 0 ? <Sep /> : null}
-            <View style={styles.row}>
-              <T size={16} style={{ flex: 1 }}>{k as string}</T>
-              {ok ? <T w="s" size={15} color={C.green}>Doğrulandı</T> : <Tap><T w="s" size={15} color={C.primary}>Ekle</T></Tap>}
-            </View>
+        <View style={styles.row}>
+          <T size={16} style={{ flex: 1 }}>Telefon</T>
+          <T w="s" size={15} color={C.green}>Doğrulandı</T>
+        </View>
+        <Sep />
+        <View style={styles.row}>
+          <View style={{ flex: 1 }}>
+            <T size={16}>Öğrenci e-postası</T>
+            <T size={13} color={C.text2}>…@erciyes.edu.tr</T>
           </View>
-        ))}
+          <T w="s" size={15} color={C.green}>Doğrulandı</T>
+        </View>
+        <Sep />
+        <Tap onPress={() => root?.navigate('Dogrulama')} disabled={verification.status === 'verified'} style={styles.row}>
+          <View style={{ flex: 1 }}>
+            <T size={16}>Kimlik doğrulama</T>
+            <T size={13} color={C.text2}>Kadın / erkek masaları için gerekli</T>
+          </View>
+          {verification.status === 'verified'
+            ? <T w="s" size={15} color={C.green}>Doğrulandı · {verification.gender === 'kadin' ? 'Kadın' : 'Erkek'}</T>
+            : <T w="s" size={15} color={C.primary}>Doğrula</T>}
+        </Tap>
+      </Card>
+
+      <Card>
+        <Tap onPress={() => root?.navigate('Masalarim')} style={styles.row}>
+          <Icon name="table" size={20} color={C.primary} />
+          <T size={16} style={{ flex: 1 }}>Masalarım</T>
+          <Icon name="chevRight" color={C.chevron} size={14} strokeWidth={3} />
+        </Tap>
       </Card>
 
       <Segmented value={tab} onChange={setTab} items={[{ id: 'praise', label: 'En çok övülen' }, { id: 'games', label: 'Son oyunlar' }]} />
