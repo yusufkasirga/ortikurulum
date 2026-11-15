@@ -1,0 +1,43 @@
+name: Expo Go preview
+on:
+  push:
+    branches: [preview]
+permissions:
+  contents: write
+jobs:
+  serve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm install --no-save @expo/ngrok@^4.1.0
+      - run: pip install qrcode pillow
+      - name: Start Metro with tunnel
+        run: |
+          nohup npx expo start --tunnel --go > metro.log 2>&1 &
+          for i in $(seq 1 60); do
+            sleep 5
+            URL=$(curl -s http://127.0.0.1:4040/api/tunnels | python3 -c "import sys,json; t=json.load(sys.stdin)['tunnels']; print([x['public_url'] for x in t if x['public_url'].startswith('https')][0])" 2>/dev/null || true)
+            if [ -n "$URL" ]; then break; fi
+          done
+          cat metro.log | tail -40
+          if [ -z "$URL" ]; then echo "no tunnel"; exit 1; fi
+          HOST=${URL#https://}
+          EXP="exp://$HOST"
+          echo "EXP=$EXP" >> $GITHUB_ENV
+          # warm up the Android/iOS bundle so first open is fast
+          curl -s -o /dev/null -m 600 "http://127.0.0.1:8081/index.bundle?platform=ios&dev=true&minify=false" || true
+          python3 -c "import qrcode,os; qrcode.make(os.environ['EXP']).save('orti-qr.png')"
+      - name: Publish link
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="expo-go-${{ github.run_number }}"
+          gh release create "$TAG" orti-qr.png --prerelease --title "Expo Go önizleme #${{ github.run_number }}" --notes "$EXP" --repo "${{ github.repository }}"
+      - name: Keep server alive
+        run: sleep 6000
