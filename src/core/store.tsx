@@ -25,6 +25,8 @@ export type Persisted = {
   location: LocationPrecision;
   blocked: string[];
   moderatorDemo: boolean;
+  /** Linked Discord account (username only; we never read servers or messages). */
+  discord?: { username: string; showOnTables: boolean };
 };
 
 const DEFAULTS: Persisted = {

@@ -2,7 +2,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Circle } from 'react-native-svg';
-import { C } from '../../core/theme';
+import { C, DISCORD } from '../../core/theme';
 import Icon from '../../components/Icon';
 import { Avatar, Card, GameTile, Segmented, Sep, T, Tap } from '../../components/ui';
 import { RECENT_GAMES } from '../oyun/data';
@@ -22,7 +22,7 @@ const CIRC = 2 * Math.PI * 34;
 
 export default function Profil({ navigation }: BottomTabScreenProps<TabParams, 'Profil'>) {
   const insets = useSafeAreaInsets();
-  const { verification, campusId } = useSession();
+  const { verification, campusId, phone, studentEmail, discord } = useSession();
   const root = navigation.getParent();
   const [tab, setTab] = React.useState<'praise' | 'games'>('praise');
   return (
@@ -30,7 +30,7 @@ export default function Profil({ navigation }: BottomTabScreenProps<TabParams, '
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
         <T w="x" size={34} style={{ letterSpacing: -0.8 }} accessibilityRole="header">Profil</T>
         <Tap onPress={() => root?.navigate('Ayarlar')} accessibilityLabel="Ayarlar" style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }}>
-          <Icon name="menu" size={20} color={C.primary} />
+          <Icon name="gear" size={22} color={C.text} />
         </Tap>
       </View>
 
@@ -73,17 +73,20 @@ export default function Profil({ navigation }: BottomTabScreenProps<TabParams, '
 
       <Card>
         <View style={styles.row}>
-          <T size={16} style={{ flex: 1 }}>Telefon</T>
-          <T w="s" size={15} color={C.green}>Doğrulandı</T>
+          <View style={{ flex: 1 }}>
+            <T size={16}>Telefon</T>
+            {phone ? <T size={13} color={C.text2}>+90 {phone.slice(0, 3)} ••• •• {phone.slice(-2)}</T> : null}
+          </View>
+          <T w="s" size={15} color={phone ? C.green : C.text2}>{phone ? 'Doğrulandı' : 'Apple ile giriş'}</T>
         </View>
         <Sep />
-        <View style={styles.row}>
+        <Tap onPress={() => root?.navigate('Kayit', { only: 'eposta' })} disabled={!!studentEmail} style={styles.row}>
           <View style={{ flex: 1 }}>
             <T size={16}>Öğrenci e-postası</T>
-            <T size={13} color={C.text2}>…@erciyes.edu.tr</T>
+            <T size={13} color={C.text2}>{studentEmail ? `…@${studentEmail.split('@')[1]}` : 'Öğrenci rozeti ve kampüs masaları için'}</T>
           </View>
-          <T w="s" size={15} color={C.green}>Doğrulandı</T>
-        </View>
+          <T w="s" size={15} color={studentEmail ? C.green : C.primary}>{studentEmail ? 'Doğrulandı' : 'Ekle'}</T>
+        </Tap>
         <Sep />
         <Tap onPress={() => root?.navigate('Dogrulama')} disabled={verification.status === 'verified'} style={styles.row}>
           <View style={{ flex: 1 }}>
@@ -95,6 +98,23 @@ export default function Profil({ navigation }: BottomTabScreenProps<TabParams, '
             : <T w="s" size={15} color={C.primary}>Doğrula</T>}
         </Tap>
       </Card>
+
+      <View style={{ gap: 8 }}>
+        <T w="s" size={13} color={C.text2} style={{ marginLeft: 4 }}>BAĞLANTILAR</T>
+        <Card>
+          <Tap onPress={() => root?.navigate('DiscordBagla')} style={styles.row} accessibilityLabel={discord ? `Discord bağlı, @${discord.username}` : 'Discord bağla'}>
+            <View style={{ width: 32, height: 32, borderRadius: 10, backgroundColor: DISCORD, alignItems: 'center', justifyContent: 'center' }}>
+              <Icon name="discord" size={18} color="#FFFFFF" />
+            </View>
+            <View style={{ flex: 1 }}>
+              <T size={16}>Discord</T>
+              <T size={13} color={C.text2}>{discord ? `@${discord.username}` : 'Online masalarda sesliye tek dokunuş'}</T>
+            </View>
+            <T w="s" size={15} color={discord ? C.green : C.primary}>{discord ? 'Bağlı' : 'Bağla'}</T>
+            <Icon name="chevRight" color={C.chevron} size={14} strokeWidth={3} />
+          </Tap>
+        </Card>
+      </View>
 
       <Card>
         <Tap onPress={() => root?.navigate('Masalarim')} style={styles.row}>

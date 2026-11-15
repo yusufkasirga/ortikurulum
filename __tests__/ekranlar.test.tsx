@@ -84,6 +84,10 @@ const ROUTES: [string, any?][] = [
   ['Moderasyon'],
   ['IsletmePaneli'],
   ['KulupPaneli'],
+  ['DiscordBagla'],
+  ['Kayit', { only: 'eposta' }],
+  ['Lobi', { mine: { game: 'Valorant', need: 2, total: 5, time: 'Bu akşam 21:30', level: 'Orta', discord: 'https://discord.gg/orti' } }],
+  ['Lobi', { mine: { game: 'Okey', need: 1, total: 4, time: 'Şimdi', level: 'Her seviye', venueId: 'arena' } }],
 ];
 
 beforeAll(() => { jest.useFakeTimers(); });

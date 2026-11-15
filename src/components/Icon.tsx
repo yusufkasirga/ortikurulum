@@ -2,6 +2,7 @@ import React from 'react';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 
 export type IconName =
+  | 'gear' | 'discord' | 'link' | 'external' | 'headset'
   | 'pin' | 'chevDown' | 'chevRight' | 'back' | 'search' | 'bell' | 'bolt' | 'compass' | 'table'
   | 'plus' | 'chat' | 'person' | 'clock' | 'bars' | 'shield' | 'star' | 'heart' | 'lock' | 'check'
   | 'checkCircle' | 'info' | 'share' | 'bookmark' | 'flag' | 'image' | 'send'
@@ -66,6 +67,11 @@ export default function Icon({ name, size = 22, color = '#1C1C1E', fill = 'none'
     case 'upload': body = (<><Path {...p} d="M12 16V4M7 9l5-5 5 5" /><Path {...p} d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" /></>); break;
     case 'save': body = <Path {...p} fill={fill} d="M6 3h12v18l-6-4-6 4z" />; break;
     case 'moon': body = <Path {...p} d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z" />; break;
+    case 'gear': body = (<><Circle {...p} cx={12} cy={12} r={3} /><Path {...p} d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" /></>); break;
+    case 'discord': body = (<><Path fill={color} d="M19.3 5.3A16.6 16.6 0 0 0 15.2 4l-.5 1a15.4 15.4 0 0 0-5.4 0l-.5-1a16.5 16.5 0 0 0-4.1 1.3C2.1 9.2 1.4 13 1.8 16.8a16.7 16.7 0 0 0 5 2.5l1.1-1.7a10.8 10.8 0 0 1-1.7-.8l.4-.3a11.9 11.9 0 0 0 10.8 0l.4.3c-.5.3-1.1.6-1.7.8l1.1 1.7a16.6 16.6 0 0 0 5-2.5c.5-4.4-.8-8.2-2.9-11.5zM8.7 14.5c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2zm6.6 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2z" /></>); break;
+    case 'link': body = (<><Path {...p} d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1" /><Path {...p} d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1" /></>); break;
+    case 'external': body = (<><Path {...p} d="M14 4h6v6M20 4l-9 9" /><Path {...p} d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></>); break;
+    case 'headset': body = (<><Path {...p} d="M4 15v-3a8 8 0 0 1 16 0v3" /><Rect {...p} x={3} y={14} width={4} height={6} rx={1.5} /><Rect {...p} x={17} y={14} width={4} height={6} rx={1.5} /></>); break;
     case 'edit': body = <Path {...p} d="M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4" />; break;
   }
   return (

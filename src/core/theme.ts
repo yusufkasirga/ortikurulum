@@ -47,3 +47,7 @@ export const F = {
 export type Weight = keyof typeof F;
 
 export const R = { sm: 10, md: 16, lg: 20, xl: 22, pill: 999 };
+
+/** Discord blurple darkened so white text passes WCAG AAA (≥7:1), plus its light tint. */
+export const DISCORD = '#353E9A';
+export const DISCORD_TINT = '#E8EAFB';

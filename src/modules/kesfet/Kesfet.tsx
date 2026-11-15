@@ -31,8 +31,11 @@ export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, '
   const { modules, campusId } = useSession();
   const openModule = useOpenModule();
   const { width } = useWindowDimensions();
-  const tileW = Math.floor((width - 40 - 20) / 3);
-  const shownModules = MODULES.filter((m) => modules[m.id] && m.id !== 'eslesme');
+  const tileW = Math.floor((width - 40 - 3 * 10) / 4);
+  const [expanded, setExpanded] = React.useState(false);
+  // Tab bar + header already cover matching, map, new table, chats and verification.
+  const HIDDEN = ['eslesme', 'harita', 'masaac', 'sohbet', 'guvenlik'];
+  const shownModules = MODULES.filter((m) => modules[m.id] && !HIDDEN.includes(m.id));
   const root = navigation.getParent();
   const sel = CATS.find((c) => c.id === cat)!;
   const list = cat === 'all' ? ALL : ALL.filter(({ v }) => sel.cats.includes(v.cat));
@@ -61,25 +64,13 @@ export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, '
       <View style={{ gap: 6 }}>
         <T w="s" size={15} color={C.text2}>Selam Deniz</T>
         <T w="x" size={32} style={{ letterSpacing: -1, lineHeight: 36 }} accessibilityRole="header">Bu akşam{'\n'}ne oynuyoruz?</T>
-        <Tap style={styles.livePill}>
+        <Tap style={styles.livePill} onPress={() => navigation.navigate('Harita')} accessibilityLabel="Açık masaları haritada gör">
           <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: C.greenDot }} />
           <T w="s" size={13} color={C.green}>Talas · {campusById(campusId).short} çevresinde {ALL.length} açık masa</T>
         </Tap>
       </View>
 
       <Countdown onOpen={() => root?.navigate('Sohbet')} onQr={() => root?.navigate('QrCheckin', { venueId: NEXT_TABLE.venueId })} />
-
-      <View style={{ gap: 10 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <T w="b" size={22} style={{ letterSpacing: -0.4 }} accessibilityRole="header">Modüller</T>
-          <Tap onPress={() => root?.navigate('Moduller')} style={{ minHeight: 32, justifyContent: 'center' }}><T w="s" size={15} color={C.primary}>Düzenle</T></Tap>
-        </View>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
-          {shownModules.map((m) => (
-            <ModuleTile key={m.id} m={m} width={tileW} onPress={() => openModule(m)} badge={m.id === 'sohbet' ? '2' : m.id === 'etkinlik' ? 'Yeni' : undefined} />
-          ))}
-        </View>
-      </View>
 
       <Tap haptic="medium" onPress={() => root?.navigate('HizliEsles')} style={styles.hero}>
         <View style={[styles.deco, { width: 120, height: 150, right: -24, top: -36, transform: [{ rotate: '18deg' }] }]} />
@@ -92,12 +83,60 @@ export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, '
         <View style={styles.heroGo}><Icon name="chevRight" color="#FFFFFF" size={16} strokeWidth={3} /></View>
       </Tap>
 
+      <View style={{ flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: -6 }}>
+        <T w="b" size={22} style={{ letterSpacing: -0.4 }} accessibilityRole="header">Yakınındaki eksikler</T>
+        <Tap onPress={() => navigation.navigate('Harita')} style={{ minHeight: 32, justifyContent: 'center' }}><T w="s" size={15} color={C.primary}>Haritada gör</T></Tap>
+      </View>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -20 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 8 }}>
+        {CATS.map((c) => {
+          const on = c.id === cat;
+          return (
+            <Tap key={c.id} haptic="light" onPress={() => setCat(c.id)} accessibilityState={{ selected: on }}
+              style={[styles.cat, { backgroundColor: on ? c.color : c.tint }]}>
+              <T w="b" size={14} color={on ? '#FFFFFF' : c.ink}>{c.label}</T>
+            </Tap>
+          );
+        })}
+      </ScrollView>
+
+
+      <View style={{ gap: 12 }}>
+        {(expanded ? list : list.slice(0, 3)).map(({ v, t }) => <LobbyCard key={t.id} v={v} t={t} onPress={() => root?.navigate('Lobi', { venueId: v.id, tableId: t.id })} />)}
+        {!expanded && list.length > 3 ? (
+          <Tap onPress={() => setExpanded(true)} style={styles.more} accessibilityLabel={`${list.length - 3} masa daha göster`}>
+            <T w="s" size={15} color={C.primary}>{list.length - 3} masa daha</T>
+            <Icon name="chevDown" size={16} color={C.primary} strokeWidth={2.4} />
+          </Tap>
+        ) : null}
+        {list.length === 0 ? (
+          <View style={styles.empty}>
+            <T w="s" size={16}>Şu an bu kategoride eksik yok</T>
+            <T size={14} color={C.text2} style={{ textAlign: 'center' }}>İlk masayı sen aç, yakındakilere haber verelim.</T>
+            <Tap haptic="medium" onPress={() => root?.navigate('Olustur')} style={styles.emptyBtn}>
+              <T w="s" size={15} color="#FFFFFF">Masa aç</T>
+            </Tap>
+          </View>
+        ) : null}
+      </View>
+
+      <View style={{ gap: 10 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <T w="b" size={22} style={{ letterSpacing: -0.4 }} accessibilityRole="header">Kısayollar</T>
+          <Tap onPress={() => root?.navigate('Moduller')} style={{ minHeight: 32, justifyContent: 'center' }}><T w="s" size={15} color={C.primary}>Düzenle</T></Tap>
+        </View>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 10, rowGap: 16 }}>
+          {shownModules.map((m) => (
+            <ModuleTile key={m.id} m={m} width={tileW} onPress={() => openModule(m)} badge={m.id === 'sohbet' ? '2' : m.id === 'etkinlik' ? 'Yeni' : undefined} />
+          ))}
+        </View>
+      </View>
+
       {FREE && modules.program ? (
         <Tap onPress={() => navigation.navigate('Kampus')} style={styles.freeCard}>
           <View style={styles.freeIcon}><Icon name="calendar" size={22} color="#05605F" /></View>
           <View style={{ flex: 1 }}>
             <T w="b" size={16} color="#05605F">Bugün {FREE.start}:00–{FREE.end}:00 arası boşsun</T>
-            <T size={13} color="#0B6E6D">Ders programına göre {ALL.length} masa uygun · bak</T>
+            <T size={13} color="#0B6E6D">Ders programına göre {ALL.length} masa uygun</T>
           </View>
           <Icon name="chevRight" color="#05605F" size={14} strokeWidth={3} />
         </Tap>
@@ -113,33 +152,6 @@ export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, '
         </ScrollView>
       </View> : null}
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -20 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 8 }}>
-        {CATS.map((c) => {
-          const on = c.id === cat;
-          return (
-            <Tap key={c.id} haptic="light" onPress={() => setCat(c.id)} accessibilityState={{ selected: on }}
-              style={[styles.cat, { backgroundColor: on ? c.color : c.tint }]}>
-              <T w="b" size={14} color={on ? '#FFFFFF' : c.ink}>{c.label}</T>
-            </Tap>
-          );
-        })}
-      </ScrollView>
-
-
-      <T w="b" size={22} style={{ letterSpacing: -0.4 }} accessibilityRole="header">Yakınındaki eksikler</T>
-
-      <View style={{ gap: 12 }}>
-        {list.map(({ v, t }) => <LobbyCard key={t.id} v={v} t={t} onPress={() => root?.navigate('Lobi', { venueId: v.id, tableId: t.id })} />)}
-        {list.length === 0 ? (
-          <View style={styles.empty}>
-            <T w="s" size={16}>Şu an bu kategoride eksik yok</T>
-            <T size={14} color={C.text2} style={{ textAlign: 'center' }}>İlk masayı sen aç, yakındakilere haber verelim.</T>
-            <Tap haptic="medium" onPress={() => root?.navigate('Olustur')} style={styles.emptyBtn}>
-              <T w="s" size={15} color="#FFFFFF">Masa aç</T>
-            </Tap>
-          </View>
-        ) : null}
-      </View>
     </ScrollView>
   );
 }
@@ -154,8 +166,9 @@ function Countdown({ onOpen, onQr }: { onOpen: () => void; onQr: () => void }) {
     <Tap onPress={onOpen} style={styles.live} accessibilityLabel={`Yaklaşan masa: ${NEXT_TABLE.game}, ${NEXT_TABLE.venue}, ${mm} dakika kaldı`}>
       <View style={styles.liveTile}><Icon name="tiles" size={20} color="#FFF" strokeWidth={2} /></View>
       <View style={{ flex: 1 }}>
-        <T w="s" size={12} color="rgba(255,255,255,0.65)">SIRADAKİ MASAN · {NEXT_TABLE.seats}</T>
-        <T w="b" size={15} color="#FFF" numberOfLines={1}>{NEXT_TABLE.game} · {NEXT_TABLE.venue}</T>
+        <T w="s" size={12} color="rgba(255,255,255,0.72)">SIRADAKİ MASAN · {NEXT_TABLE.seats}</T>
+        <T w="b" size={16} color="#FFF" numberOfLines={1}>{NEXT_TABLE.game}</T>
+        <T size={13} color="rgba(255,255,255,0.8)" numberOfLines={1}>{NEXT_TABLE.venue}</T>
       </View>
       <View style={{ alignItems: 'flex-end', gap: 4 }}>
         <T w="x" size={22} color={C.sun} style={{ fontVariant: ['tabular-nums'] }}>{mm}:{ss}</T>
@@ -176,7 +189,7 @@ function FeaturedCard({ v, onPress }: { v: Venue; onPress: () => void }) {
         {open ? <View style={styles.featOpen}><View style={{ width: 7, height: 7, borderRadius: 4, backgroundColor: C.lime }} /><T w="b" size={12} color={meta.on}>{open} kişi aranıyor</T></View> : null}
       </View>
       <View style={{ flex: 1 }} />
-      <T w="x" size={21} color={meta.on} numberOfLines={1} style={{ letterSpacing: -0.4 }}>{v.name}</T>
+      <T w="x" size={20} color={meta.on} numberOfLines={2} style={{ letterSpacing: -0.4, lineHeight: 24 }}>{v.name}</T>
       <View style={styles.offer}><T w="b" size={14} color="#241200" numberOfLines={2}>{v.featured?.offer}</T></View>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
         {v.google ? <T w="s" size={13} color={meta.on}>★ {v.google.rating.toFixed(1).replace('.', ',')}</T> : null}
@@ -187,6 +200,7 @@ function FeaturedCard({ v, onPress }: { v: Venue; onPress: () => void }) {
   );
 }
 
+const INITIALS = ['EA', 'SY', 'ZK', 'BT', 'CY', 'KD', 'NÖ', 'İS'];
 const AV = ['#FFD8B5', '#CFE3FF', '#D3F0DA', '#E8DAFF', '#FFE3E8', '#FFF1C2'];
 
 function LobbyCard({ v, t, onPress }: { v: Venue; t: OpenTable; onPress: () => void }) {
@@ -209,7 +223,7 @@ function LobbyCard({ v, t, onPress }: { v: Venue; t: OpenTable; onPress: () => v
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           {Array.from({ length: Math.min(seated, 4) }).map((_, idx) => (
-            <View key={idx} style={{ marginLeft: idx === 0 ? 0 : -8 }}><Avatar i={idx === 0 ? t.host.split(' ').map((x) => x[0]).join('') : '•'} bg={AV[idx % AV.length]} size={32} border /></View>
+            <View key={idx} style={{ marginLeft: idx === 0 ? 0 : -8 }}><Avatar i={idx === 0 ? t.host.split(' ').map((x) => x[0]).join('') : INITIALS[(t.id.charCodeAt(t.id.length - 1) + idx) % INITIALS.length]} bg={AV[idx % AV.length]} size={32} border /></View>
           ))}
           {seated > 4 ? <T size={12} color={C.text2} style={{ marginLeft: 6 }}>+{seated - 4}</T> : null}
           {Array.from({ length: Math.min(t.need, 3) }).map((_, idx) => (
@@ -231,6 +245,7 @@ function LobbyCard({ v, t, onPress }: { v: Venue; t: OpenTable; onPress: () => v
 }
 
 const styles = StyleSheet.create({
+  more: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, height: 48, borderRadius: 16, backgroundColor: '#FFFFFF' },
   topRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   roundBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' },
   dot: { position: 'absolute', top: 8, right: 9, width: 10, height: 10, borderRadius: 5, backgroundColor: C.badge, borderWidth: 2, borderColor: '#FFFFFF' },

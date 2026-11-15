@@ -36,6 +36,7 @@ import Yasal from '../modules/hesap/Yasal';
 import Moderasyon from '../modules/yonetim/Moderasyon';
 import IsletmePaneli from '../modules/yonetim/IsletmePaneli';
 import KulupPaneli from '../modules/yonetim/KulupPaneli';
+import DiscordBagla from '../modules/hesap/DiscordBagla';
 import { useSession } from './store';
 
 export type TabParams = {
@@ -49,7 +50,7 @@ export type RootParams = {
   Hosgeldin: undefined;
   Tabs: NavigatorScreenParams<TabParams> | undefined;
   HizliEsles: undefined;
-  Lobi: { id?: string; venueId?: string; tableId?: string } | undefined;
+  Lobi: { id?: string; venueId?: string; tableId?: string; mine?: MyTable } | undefined;
   Sohbet: undefined;
   Olustur: { venueId?: string; audience?: 'karma' | 'kadin' | 'erkek' } | undefined;
   Mekan: { id: string };
@@ -64,13 +65,17 @@ export type RootParams = {
   Ekipler: undefined;
   Lig: undefined;
   QrCheckin: { venueId?: string } | undefined;
-  Kayit: { method?: 'apple' | 'telefon'; appleToken?: string; name?: string } | undefined;
+  Kayit: { method?: 'apple' | 'telefon'; appleToken?: string; name?: string; only?: 'eposta' } | undefined;
   Ayarlar: undefined;
   Yasal: { doc: 'kvkk' | 'kosullar' | 'topluluk' };
   Moderasyon: undefined;
   IsletmePaneli: undefined;
   KulupPaneli: undefined;
+  DiscordBagla: undefined;
 };
+
+/** A table the user just opened. No venueId = online table. */
+export type MyTable = { game: string; need: number; total: number; time: string; level: string; discord?: string; venueId?: string };
 export type ScreenProps<K extends keyof RootParams> = NativeStackScreenProps<RootParams, K>;
 
 const Stack = createNativeStackNavigator<RootParams>();
@@ -186,6 +191,7 @@ export default function RootNavigation() {
         <Stack.Screen name="Moderasyon" component={Moderasyon} />
         <Stack.Screen name="IsletmePaneli" component={IsletmePaneli} />
         <Stack.Screen name="KulupPaneli" component={KulupPaneli} />
+        <Stack.Screen name="DiscordBagla" component={DiscordBagla} options={{ presentation: 'modal' }} />
         <Stack.Screen name="Lig" component={Lig} />
         <Stack.Screen name="QrCheckin" component={QrCheckin} options={{ presentation: 'fullScreenModal', animation: 'slide_from_bottom' }} />
       </Stack.Navigator>

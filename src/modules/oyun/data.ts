@@ -1,55 +1,5 @@
 export type Person = { i: string; bg: string; name?: string };
 
-export type Lobby = {
-  id: string;
-  game: string;
-  mark: string;
-  type: 'masa' | 'online' | 'spor';
-  partner: boolean;
-  need: string;
-  place: string;
-  dist: string;
-  tileBg: string;
-  time: string;
-  urgent: boolean;
-  host: string;
-  players: Person[];
-  empty: number;
-};
-
-export const LOBBIES: Lobby[] = [
-  {
-    id: 'okey', game: '101 Okey', mark: 'O', type: 'masa', partner: true, need: '1 kişi aranıyor',
-    place: 'Moda Kahvesi · Kadıköy', dist: '0,8 km', tileBg: '#0C642F', time: '40 dk sonra', urgent: true,
-    host: 'Kurucu Mehmet K. · Güven 98',
-    players: [{ i: 'MK', bg: '#FFD8B5' }, { i: 'EA', bg: '#CFE3FF' }, { i: 'SY', bg: '#D3F0DA' }], empty: 1,
-  },
-  {
-    id: 'val', game: 'Valorant', mark: 'V', type: 'online', partner: false, need: '2 kişi aranıyor',
-    place: 'Online · Rekabetçi · Altın ve üstü', dist: 'Online', tileBg: '#C8243C', time: 'Bugün 22:00', urgent: false,
-    host: 'Kurucu Burak T. · Güven 94',
-    players: [{ i: 'BT', bg: '#E8DAFF' }, { i: 'OK', bg: '#FFE3E8' }, { i: 'CY', bg: '#FFF1C2' }], empty: 2,
-  },
-  {
-    id: 'bilardo', game: 'Bilardo · 8 top', mark: 'B', type: 'masa', partner: true, need: '1 kişi aranıyor',
-    place: 'Cue Club · Beşiktaş', dist: '3,2 km', tileBg: '#1C1C1E', time: '25 dk sonra', urgent: true,
-    host: 'Kurucu Tolga E. · Güven 91',
-    players: [{ i: 'TE', bg: '#D7ECFF' }], empty: 1,
-  },
-  {
-    id: 'saha', game: 'Halı saha · 7v7', mark: 'H', type: 'spor', partner: false, need: '3 kişi aranıyor',
-    place: 'Ataköy Spor Tesisi', dist: '5,4 km', tileBg: '#086363', time: 'Yarın 19:00', urgent: false,
-    host: 'Kurucu Ali K. · Güven 96',
-    players: [{ i: 'AK', bg: '#FFE0C2' }, { i: 'MS', bg: '#D3F0DA' }, { i: 'RT', bg: '#CFE3FF' }], empty: 3,
-  },
-  {
-    id: 'tavla', game: 'Tavla', mark: 'T', type: 'masa', partner: false, need: '1 kişi aranıyor',
-    place: 'Çınaraltı Çay Bahçesi · Üsküdar', dist: '4,1 km', tileBg: '#8A5A2B', time: 'Bugün 18:30', urgent: false,
-    host: 'Kurucu Hasan B. · Güven 99',
-    players: [{ i: 'HB', bg: '#FFD8B5' }], empty: 1,
-  },
-];
-
 export const TABLE_PLAYERS = [
   { id: 'mk', i: 'MK', bg: '#FFD8B5', name: 'Mehmet K.', meta: 'Kurucu · 142 oyun', rating: '4,9', trust: 98 },
   { id: 'ea', i: 'EA', bg: '#CFE3FF', name: 'Elif A.', meta: '58 oyun · Dakik', rating: '4,8', trust: 95 },
@@ -79,8 +29,8 @@ export const GAMES_ONLINE: GameOpt[] = [
 ];
 
 export const RECENT_GAMES = [
-  { name: '101 Okey', meta: 'Moda Kahvesi · Dün', mark: 'O', bg: '#0C642F', score: '5,0' },
+  { name: '101 Okey', meta: 'Arena Premium Okey · Dün', mark: 'O', bg: '#0C642F', score: '5,0' },
   { name: 'Valorant', meta: 'Online · 2 gün önce', mark: 'V', bg: '#C8243C', score: '4,7' },
-  { name: 'Tavla', meta: 'Çınaraltı · Geçen hafta', mark: 'T', bg: '#8A5A2B', score: '4,9' },
-  { name: 'Halı saha', meta: 'Ataköy · Geçen hafta', mark: 'H', bg: '#086363', score: '4,6' },
+  { name: 'Tavla', meta: 'Şahinler Cafe · Geçen hafta', mark: 'T', bg: '#8A5A2B', score: '4,9' },
+  { name: 'Halı saha', meta: 'Gezegen Halı Saha · Geçen hafta', mark: 'H', bg: '#086363', score: '4,6' },
 ];

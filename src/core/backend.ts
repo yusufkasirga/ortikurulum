@@ -45,3 +45,16 @@ export async function deleteAccount(): Promise<{ ok: boolean; error?: string }> 
 export async function signOut() {
   if (supabase) await supabase.auth.signOut();
 }
+
+/** Discord account linking. Live: Supabase OAuth identity link (provider "discord", scope identify only). */
+export async function linkDiscord(): Promise<{ ok: boolean; url?: string; error?: string }> {
+  if (!isLive || !supabase) return { ok: true };
+  const { data, error } = await supabase.auth.linkIdentity({ provider: 'discord', options: { redirectTo: 'orti://auth/discord', scopes: 'identify', skipBrowserRedirect: true } });
+  return error ? { ok: false, error: error.message } : { ok: true, url: data?.url ?? undefined };
+}
+
+export const DISCORD_INVITE = /^(https?:\/\/)?(www\.)?(discord\.gg|discord\.com\/invite)\/[A-Za-z0-9-]{2,32}\/?$/;
+export const normalizeInvite = (s: string) => {
+  const t = s.trim();
+  return /^https?:\/\//.test(t) ? t : `https://${t}`;
+};

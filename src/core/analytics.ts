@@ -8,7 +8,8 @@ import { supabase } from './backend';
 export type EventName =
   | 'onboarding_tamam' | 'kampus_secildi' | 'hizli_esles_ara' | 'eslesme_bulundu' | 'masa_istek' | 'masa_onay'
   | 'masa_acildi' | 'checkin_qr' | 'puan_gonderildi' | 'sikayet' | 'not_kaydet' | 'etkinlik_birlikte'
-  | 'kutuphane_eslesme' | 'modul_ac' | 'modul_kapat' | 'kampanya_gor' | 'hesap_silindi';
+  | 'kutuphane_eslesme' | 'modul_ac' | 'modul_kapat' | 'kampanya_gor' | 'hesap_silindi'
+  | 'discord_baglandi' | 'discord_kaldirildi' | 'discord_katil' | 'masa_paylas';
 
 type Logged = { name: string; props: Record<string, string | number | boolean>; at: string };
 

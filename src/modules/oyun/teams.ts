@@ -1,7 +1,7 @@
 /** Persistent crews ("Tekrar oynarım" → ekip) and the Talas league. Demo data. */
 
 export type Member = { name: string; i: string; bg: string };
-export type Team = { id: string; name: string; game: string; usual: string; venueId: string; members: Member[]; played: number; color: string };
+export type Team = { id: string; name: string; game: string; usual: string; venueId: string; members: Member[]; played: number; color: string; discord?: string };
 
 export const TEAMS: Team[] = [
   {
@@ -9,7 +9,7 @@ export const TEAMS: Team[] = [
     members: [{ name: 'Mehmet K.', i: 'MK', bg: '#FFD8B5' }, { name: 'Elif A.', i: 'EA', bg: '#CFE3FF' }, { name: 'Sen', i: 'DA', bg: '#E2DBFF' }],
   },
   {
-    id: 'k2', name: 'Gece FC Kadrosu', game: 'EA FC · 2v2', usual: 'Hafta sonu gece · Sade Vip Lounge', venueId: 'sade', played: 5, color: '#4C21FF',
+    id: 'k2', name: 'Gece FC Kadrosu', game: 'EA FC · 2v2', usual: 'Hafta sonu gece · Sade Vip Lounge', venueId: 'sade', played: 5, color: '#4C21FF', discord: 'https://discord.gg/orti-gecefc',
     members: [{ name: 'Cem Y.', i: 'CY', bg: '#FFF1C2' }, { name: 'Kaan D.', i: 'KD', bg: '#D3F0DA' }, { name: 'Burak T.', i: 'BT', bg: '#FFE3E8' }, { name: 'Sen', i: 'DA', bg: '#E2DBFF' }],
   },
 ];

@@ -62,8 +62,8 @@ export default function Sohbet({ navigation }: ScreenProps<'Sohbet'>) {
           <View style={[styles.banner, { backgroundColor: C.tint }]}>
             <Icon name="pin" color={C.primary} size={22} />
             <View style={{ flex: 1 }}>
-              <T w="s" size={15} color={C.tintText}>Mekâna 120 m uzaktasın</T>
-              <T size={13} color={C.primaryDark}>Varınca masadaki QR’ı okut: check-in + ilk çaylar ikram</T>
+              <T w="s" size={15} color={C.tintText}>Masaya vardığında</T>
+              <T size={13} color={C.primaryDark}>masadaki QR’ı okut: check-in + ilk çaylar ikram</T>
             </View>
             <Tap haptic="medium" onPress={() => { checkIn(); navigation.navigate('QrCheckin', { venueId: 'arena' }); }} style={styles.bannerBtn}><T w="s" size={14} color="#FFFFFF">QR okut</T></Tap>
           </View>

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Linking, Platform, ScrollView, Share, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { C } from '../../core/theme';
+import { C, DISCORD, DISCORD_TINT } from '../../core/theme';
 import Icon, { IconName } from '../../components/Icon';
 import { Avatar, Card, NavBack, PrimaryButton, SectionLabel, Sep, T, Tap, tapSuccess } from '../../components/ui';
 import { ME, TABLE_PLAYERS } from './data';
@@ -17,10 +17,20 @@ type Stage = 'idle' | 'requested' | 'approved';
 
 export default function Lobi({ navigation, route }: ScreenProps<'Lobi'>) {
   const insets = useSafeAreaInsets();
-  const { verification, notif } = useSession();
-  const venue = venueById(route.params?.venueId) ?? VENUES[0];
-  const table = venue.tables.find((t) => t.id === route.params?.tableId) ?? venue.tables[0] ?? {
-    id: 'new', game: 'Yeni masa', need: 1, total: 4, time: 'Bugün 21:30', host: 'Sen', hostTrust: 96,
+  const { verification, notif, discord } = useSession();
+  const mine = route.params?.mine;
+  const online = mine && !mine.venueId ? mine : undefined;
+  const isHost = !!mine;
+  const venue = venueById(mine?.venueId ?? route.params?.venueId) ?? VENUES[0];
+  const table = mine
+    ? { id: 'mine', game: mine.game, need: mine.need, total: mine.total, time: mine.time, host: 'Sen', hostTrust: 96, level: mine.level, womenOnly: false }
+    : venue.tables.find((t) => t.id === route.params?.tableId) ?? venue.tables[0] ?? {
+      id: 'new', game: 'Yeni masa', need: 1, total: 4, time: 'Bugün 21:30', host: 'Sen', hostTrust: 96,
+    };
+  const [saved, setSaved] = React.useState(false);
+  const share = () => {
+    Share.share({ message: `${table.game} · ${online ? 'Online' : venue.name} · ${table.time}\nOrti’de ${table.need} kişi aranıyor: https://orti.app/masa/${online ? 'online' : venue.id + '-' + table.id}` }).catch(() => {});
+    track('masa_paylas');
   };
   const meta = CAT_META[venue.cat];
   const [stage, setStage] = React.useState<Stage>('idle');
@@ -29,7 +39,12 @@ export default function Lobi({ navigation, route }: ScreenProps<'Lobi'>) {
 
   const seated = table.total - table.need;
   const shown = Math.min(seated, 3);
-  const base = TABLE_PLAYERS.slice(0, shown).map((p, i) => {
+  const base = isHost
+    ? [
+      { id: 'me', i: ME.i, bg: ME.bg, name: 'Sen', meta: `Kurucu · ${ME_CAMPUS.bolum}`, rating: '4,8', trust: 96, sameDept: false },
+      ...TABLE_PLAYERS.slice(1, shown).map((p) => { const b = bolumOf(p.name); return { ...p, sameDept: b.bolum === ME_CAMPUS.bolum, meta: `${b.bolum} · ${b.sinif}. sınıf` }; }),
+    ]
+    : TABLE_PLAYERS.slice(0, shown).map((p, i) => {
     const name = i === 0 ? table.host : p.name;
     const b = bolumOf(name);
     return { ...p, name, sameDept: b.bolum === ME_CAMPUS.bolum, meta: `${i === 0 ? 'Kurucu · ' : ''}${b.bolum} · ${b.sinif}. sınıf` };
@@ -42,10 +57,10 @@ export default function Lobi({ navigation, route }: ScreenProps<'Lobi'>) {
 
   const request = () => {
     setStage('requested');
-    track('masa_istek', { mekan: venue.id });
+    track('masa_istek', { mekan: online ? 'online' : venue.id });
     timer.current = setTimeout(() => {
       tapSuccess(); setStage('approved'); track('masa_onay', { mekan: venue.id });
-      notify('masa', notif, 'Masaya onaylandın', `${table.game} · ${venue.name} · ${table.time}`);
+      notify('masa', notif, 'Masaya onaylandın', `${table.game} · ${online ? 'Online' : venue.name} · ${table.time}`);
     }, 2000);
   };
   const cancel = () => { if (timer.current) clearTimeout(timer.current); setStage('idle'); };
@@ -57,7 +72,7 @@ export default function Lobi({ navigation, route }: ScreenProps<'Lobi'>) {
   };
 
   const rows: { icon: IconName; title: string; sub: string }[] = [
-    { icon: 'clock', title: table.time, sub: 'Tahmini 2 saat' },
+    { icon: 'clock', title: table.time, sub: online ? 'Online · ses: Discord' : 'Tahmini 2 saat' },
     { icon: 'bars', title: table.level ?? 'Her seviye', sub: 'Kurucu onayıyla katılım · Güven 85+' },
   ];
 
@@ -66,8 +81,10 @@ export default function Lobi({ navigation, route }: ScreenProps<'Lobi'>) {
       <View style={styles.nav}>
         <NavBack label="Geri" onPress={() => navigation.goBack()} />
         <View style={{ flexDirection: 'row' }}>
-          <Tap accessibilityLabel="Kaydet" style={styles.navBtn}><Icon name="bookmark" color={C.primary} size={21} /></Tap>
-          <Tap accessibilityLabel="Paylaş" style={styles.navBtn}><Icon name="share" color={C.primary} size={22} /></Tap>
+          <Tap accessibilityLabel={saved ? 'Kaydedildi' : 'Kaydet'} accessibilityState={{ selected: saved }} onPress={() => setSaved((x) => !x)} style={styles.navBtn}>
+            <Icon name="save" color={C.primary} fill={saved ? C.primary : 'none'} size={21} />
+          </Tap>
+          <Tap accessibilityLabel="Paylaş" onPress={share} style={styles.navBtn}><Icon name="share" color={C.primary} size={22} /></Tap>
         </View>
       </View>
       <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 4, paddingBottom: 170, gap: 18 }}>
@@ -81,7 +98,32 @@ export default function Lobi({ navigation, route }: ScreenProps<'Lobi'>) {
           <T w="x" size={30} style={{ letterSpacing: -0.7 }} accessibilityRole="header">{table.game}</T>
         </View>
 
-        <Tap onPress={() => navigation.navigate('Mekan', { id: venue.id })} style={styles.venueCard} accessibilityLabel={`${venue.name} mekan detayı`}>
+        {online ? (
+          <View style={[styles.venueCard, { backgroundColor: DISCORD }]}>
+            <View style={[styles.catTile, { backgroundColor: 'rgba(255,255,255,0.16)' }]}><Icon name="discord" color="#FFFFFF" size={26} /></View>
+            <View style={{ flex: 1, gap: 2 }}>
+              <T w="b" size={16} color="#FFFFFF">Ses kanalı: Discord</T>
+              <T size={13} color="rgba(255,255,255,0.86)">
+                {online.discord ? (isHost ? 'Bağlantın onayladığın oyunculara açılır' : ok ? 'Onaylandın, sesliye katılabilirsin' : 'Davet bağlantısı onaydan sonra açılır') : isHost ? 'Davet bağlantısını sohbette paylaşabilirsin' : 'Kurucu davet bağlantısını sohbette paylaşacak'}
+              </T>
+            </View>
+            {online.discord && (ok || isHost) ? (
+              <Tap haptic="medium" onPress={() => { track('discord_katil'); Linking.openURL(online.discord!).catch(() => {}); }} style={styles.discordBtn} accessibilityLabel="Discord ses kanalına katıl">
+                <T w="b" size={14} color={DISCORD}>Katıl</T>
+                <Icon name="external" size={14} color={DISCORD} strokeWidth={2.4} />
+              </Tap>
+            ) : <Icon name="lock" size={18} color="rgba(255,255,255,0.8)" />}
+          </View>
+        ) : null}
+        {online && !discord ? (
+          <Tap onPress={() => navigation.navigate('DiscordBagla')} style={styles.discordHint}>
+            <Icon name="discord" size={18} color={DISCORD} />
+            <T size={14} color={DISCORD} style={{ flex: 1 }}>Discord’unu bağla, takım arkadaşların seni kolayca eklesin</T>
+            <Icon name="chevRight" color={DISCORD} size={13} strokeWidth={3} />
+          </Tap>
+        ) : null}
+
+        {!online ? <Tap onPress={() => navigation.navigate('Mekan', { id: venue.id })} style={styles.venueCard} accessibilityLabel={`${venue.name} mekan detayı`}>
           <View style={[styles.catTile, { backgroundColor: meta.color }]}><Icon name={meta.icon} color={meta.on} size={22} strokeWidth={2} /></View>
           <View style={{ flex: 1, gap: 2 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
@@ -97,7 +139,7 @@ export default function Lobi({ navigation, route }: ScreenProps<'Lobi'>) {
             </View>
           </View>
           <Icon name="chevRight" color={C.chevron} size={14} strokeWidth={3} />
-        </Tap>
+        </Tap> : null}
 
         <Card>
           {rows.map((r, idx) => (
@@ -112,12 +154,16 @@ export default function Lobi({ navigation, route }: ScreenProps<'Lobi'>) {
               </View>
             </View>
           ))}
-          <Sep inset={48} />
-          <Tap onPress={directions} style={styles.row}>
-            <Icon name="directions" color={C.primary} size={20} />
-            <T size={16} style={{ flex: 1 }}>Yol tarifi</T>
-            <Icon name="chevRight" color={C.chevron} size={14} strokeWidth={3} />
-          </Tap>
+          {!online ? (
+            <>
+              <Sep inset={48} />
+              <Tap onPress={directions} style={styles.row}>
+                <Icon name="directions" color={C.primary} size={20} />
+                <T size={16} style={{ flex: 1 }}>Yol tarifi</T>
+                <Icon name="chevRight" color={C.chevron} size={14} strokeWidth={3} />
+              </Tap>
+            </>
+          ) : null}
         </Card>
 
         <View style={{ gap: 8 }}>
@@ -134,6 +180,9 @@ export default function Lobi({ navigation, route }: ScreenProps<'Lobi'>) {
                       {p.sameDept ? <View style={styles.dept}><T w="b" size={10} color="#05605F">SENİN BÖLÜMÜN</T></View> : null}
                     </View>
                     <T size={13} color={C.text2} numberOfLines={1}>{p.meta}</T>
+                    {online && (p.id !== 'me' || discord?.showOnTables) ? (
+                      <View style={styles.dHandle}><Icon name="discord" size={11} color={DISCORD} /><T w="s" size={12} color={DISCORD}>@{p.id === 'me' ? discord?.username : p.name.toLowerCase().replace(/[^a-zçğıöşü]/g, '')}</T></View>
+                    ) : null}
                   </View>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
                     <Icon name="star" size={13} color={C.orange} fill={C.orange} strokeWidth={1} />
@@ -157,13 +206,19 @@ export default function Lobi({ navigation, route }: ScreenProps<'Lobi'>) {
       </ScrollView>
 
       <View style={[styles.footer, { paddingBottom: insets.bottom + 12 }]}>
-        {stage === 'idle' && womenLocked ? (
+        {isHost ? (
+          <>
+            <PrimaryButton title="Masan yayında · Paylaş" onPress={share} />
+            <T size={13} color={C.text2} style={{ textAlign: 'center' }}>Katılma istekleri geldikçe bildirim alacaksın</T>
+          </>
+        ) : null}
+        {!isHost && stage === 'idle' && womenLocked ? (
           <>
             <PrimaryButton title="Kadın masası · Önce kimliğini doğrula" onPress={() => navigation.navigate('Dogrulama')} />
             <T size={13} color={C.text2} style={{ textAlign: 'center' }}>Bu masayı yalnızca doğrulanmış kadın oyuncular görür</T>
           </>
         ) : null}
-        {stage === 'idle' && !womenLocked ? (
+        {!isHost && stage === 'idle' && !womenLocked ? (
           <>
             <PrimaryButton title="Katılma isteği gönder" onPress={request} />
             <T size={13} color={C.text2} style={{ textAlign: 'center' }}>{table.host} genelde birkaç dakika içinde yanıtlıyor</T>
@@ -203,5 +258,8 @@ const styles = StyleSheet.create({
   partner: { backgroundColor: C.tint, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6 },
   seat: { width: 36, height: 36, borderRadius: 18, borderWidth: 2, borderStyle: 'dashed', borderColor: C.gray, alignItems: 'center', justifyContent: 'center' },
   footer: { position: 'absolute', left: 0, right: 0, bottom: 0, paddingHorizontal: 20, paddingTop: 12, gap: 8, backgroundColor: 'rgba(242,242,247,0.97)' },
+  discordBtn: { flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: '#FFFFFF', height: 36, paddingHorizontal: 14, borderRadius: 999 },
+  discordHint: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: DISCORD_TINT, borderRadius: 14, paddingHorizontal: 14, paddingVertical: 12 },
+  dHandle: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 3, alignSelf: 'flex-start', backgroundColor: DISCORD_TINT, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6 },
   pending: { height: 54, borderRadius: 16, backgroundColor: '#FFFFFF', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 },
 });

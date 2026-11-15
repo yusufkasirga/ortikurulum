@@ -59,8 +59,8 @@ export default function Mekan({ navigation, route }: ScreenProps<'Mekan'>) {
             <T size={12} color={C.text2}>Google · {v.google?.count ?? 0} yorum</T>
           </Tap>
           <View style={styles.stat}>
-            <T w="x" size={20}>—</T>
-            <T size={12} color={C.text2}>Orti oyuncu puanı</T>
+            <T w="x" size={20} color={C.primary}>Yeni</T>
+            <T size={12} color={C.text2}>Orti puanı ilk oyunlardan sonra</T>
           </View>
           <View style={styles.stat}>
             <T w="x" size={20}>{fmtKm(distanceKm(v.lat, v.lng))}</T>

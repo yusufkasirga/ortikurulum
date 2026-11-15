@@ -1,7 +1,8 @@
 import React from 'react';
 import { ScrollView, StyleSheet, TextInput, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { C, F } from '../../core/theme';
+import { C, DISCORD, F } from '../../core/theme';
+import { DISCORD_INVITE, normalizeInvite } from '../../core/backend';
 import Icon from '../../components/Icon';
 import { Card, GameTile, SectionLabel, Segmented, Sep, T, Tap, Toggle, tapLight, tapSuccess } from '../../components/ui';
 import { CAT_META, VENUES, Venue, VenueCat, venueById } from '../mekan/venues';
@@ -12,6 +13,8 @@ import { track } from '../../core/analytics';
 type Mode = 'masa' | 'online';
 type Join = 'approve' | 'instant';
 type Audience = 'karma' | 'kadin' | 'erkek';
+type Level = 'Yeni başlayan' | 'Orta' | 'İyi' | 'Her seviye';
+const TIMES = ['Şimdi', '1 saat sonra', 'Bu akşam 21:30', 'Yarın 20:00'];
 type Game = { id: string; label: string; mark: string; bg: string; size: number; cats: VenueCat[] };
 
 const TABLE_GAMES: Game[] = [
@@ -49,6 +52,11 @@ export default function Olustur({ navigation, route }: ScreenProps<'Olustur'>) {
   const [audience, setAudience] = React.useState<Audience | undefined>(route.params?.audience);
   const [trusted, setTrusted] = React.useState(true);
   const [note, setNote] = React.useState('');
+  const [time, setTime] = React.useState(TIMES[2]);
+  const [level, setLevel] = React.useState<Level>('Her seviye');
+  const [invite, setInvite] = React.useState('');
+  const inviteOk = invite.trim() === '' || DISCORD_INVITE.test(invite.trim());
+  const { discord } = useSession();
 
   const list = mode === 'masa' ? TABLE_GAMES : ONLINE_GAMES;
   const game = list.find((g) => g.id === gameId) ?? list[0];
@@ -59,15 +67,21 @@ export default function Olustur({ navigation, route }: ScreenProps<'Olustur'>) {
 
   const restricted = audience === 'kadin' || audience === 'erkek';
   const verifiedForAudience = !restricted || (verification.status === 'verified' && verification.gender === audience);
-  const canPublish = !!audience && verifiedForAudience;
+  const canPublish = !!audience && verifiedForAudience && inviteOk;
 
   const changeMode = (m: Mode) => { setMode(m); setGameId(m === 'masa' ? 'okey' : 'val'); setNeed(1); setVenueId(undefined); };
   const publish = () => {
     if (!canPublish) return;
     tapSuccess();
-    track('masa_acildi', { oyun: game.id, kitle: audience ?? 'karma', mod: mode });
+    track('masa_acildi', { oyun: game.id, kitle: audience ?? 'karma', mod: mode, discord: !!invite.trim() });
     navigation.goBack();
-    navigation.navigate('Lobi', { venueId: venue?.id ?? 'arena', tableId: 't1' });
+    navigation.navigate('Lobi', {
+      mine: {
+        game: game.label, need: n, total: game.size, time, level,
+        discord: mode === 'online' && invite.trim() ? normalizeInvite(invite) : undefined,
+        venueId: mode === 'masa' ? venue?.id ?? 'arena' : undefined,
+      },
+    });
   };
   const top = insets.top > 30 ? 12 : insets.top + 8;
 
@@ -120,6 +134,30 @@ export default function Olustur({ navigation, route }: ScreenProps<'Olustur'>) {
           </View>
         ) : null}
 
+        {mode === 'online' ? (
+          <View style={{ gap: 8 }}>
+            <SectionLabel>Ses kanalı (isteğe bağlı)</SectionLabel>
+            <Card style={{ padding: 14, gap: 8 }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                <View style={{ width: 32, height: 32, borderRadius: 10, backgroundColor: DISCORD, alignItems: 'center', justifyContent: 'center' }}>
+                  <Icon name="discord" size={18} color="#FFFFFF" />
+                </View>
+                <TextInput value={invite} onChangeText={setInvite} placeholder="discord.gg/davet-kodu" placeholderTextColor={C.gray}
+                  autoCapitalize="none" autoCorrect={false} keyboardType="url" accessibilityLabel="Discord davet bağlantısı"
+                  style={{ flex: 1, fontFamily: F.m, fontSize: 16, color: C.text, padding: 0, minHeight: 32 }} />
+              </View>
+              <T size={13} color={inviteOk ? C.text2 : C.red} style={{ lineHeight: 18 }}>
+                {inviteOk ? 'Bağlantı yalnızca onayladığın oyunculara gösterilir.' : 'Geçerli bir Discord davet bağlantısı gir (discord.gg/…).'}
+              </T>
+              {!discord ? (
+                <Tap onPress={() => navigation.navigate('DiscordBagla')} style={{ minHeight: 32, justifyContent: 'center' }}>
+                  <T w="s" size={14} color={DISCORD}>Discord hesabını da bağla ›</T>
+                </Tap>
+              ) : null}
+            </Card>
+          </View>
+        ) : null}
+
         <View style={{ gap: 8 }}>
           <SectionLabel>Kimler katılabilir? (zorunlu)</SectionLabel>
           <Card>
@@ -169,17 +207,23 @@ export default function Olustur({ navigation, route }: ScreenProps<'Olustur'>) {
             </View>
           </View>
           <Sep />
-          <View style={styles.row}>
-            <T size={16} style={{ flex: 1 }}>Zaman</T>
-            <View style={styles.pill}><T size={15}>Bugün</T></View>
-            <View style={styles.pill}><T size={15}>21:30</T></View>
+          <View style={[styles.row, { flexDirection: 'column', alignItems: 'stretch', gap: 10 }]}>
+            <T size={16}>Ne zaman?</T>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+              {TIMES.map((x) => (
+                <Tap key={x} onPress={() => { tapLight(); setTime(x); }} accessibilityRole="radio" accessibilityState={{ checked: time === x }}
+                  style={[styles.pill, time === x && { backgroundColor: C.text }]}>
+                  <T w="s" size={14} color={time === x ? '#FFFFFF' : C.text}>{x}</T>
+                </Tap>
+              ))}
+            </View>
           </View>
           <Sep />
-          <Tap style={styles.row}>
-            <T size={16} style={{ flex: 1 }}>Seviye</T>
-            <T size={16} color={C.text2}>Orta</T>
-            <Icon name="chevRight" color={C.chevron} size={14} strokeWidth={3} />
-          </Tap>
+          <View style={[styles.row, { flexDirection: 'column', alignItems: 'stretch', gap: 10 }]}>
+            <T size={16}>Seviye</T>
+            <Segmented<Level> value={level} onChange={setLevel}
+              items={[{ id: 'Her seviye', label: 'Hepsi' }, { id: 'Yeni başlayan', label: 'Yeni' }, { id: 'Orta', label: 'Orta' }, { id: 'İyi', label: 'İyi' }]} />
+          </View>
         </Card>
 
         <Card>
@@ -234,7 +278,7 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, paddingVertical: 12, minHeight: 50 },
   stepper: { flexDirection: 'row', alignItems: 'center', backgroundColor: C.fill, borderRadius: 9, height: 34 },
   stepBtn: { width: 46, height: 34, alignItems: 'center', justifyContent: 'center' },
-  pill: { backgroundColor: C.fill, borderRadius: 7, paddingHorizontal: 10, paddingVertical: 5 },
+  pill: { backgroundColor: C.fill, borderRadius: 999, paddingHorizontal: 14, height: 36, justifyContent: 'center' },
   verify: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: C.tint, borderRadius: 16, padding: 14 },
   verifyBtn: { height: 36, paddingHorizontal: 14, borderRadius: 10, backgroundColor: C.primary, justifyContent: 'center' },
 });

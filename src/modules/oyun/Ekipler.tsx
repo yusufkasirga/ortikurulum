@@ -1,7 +1,7 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Linking, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { C } from '../../core/theme';
+import { C, DISCORD } from '../../core/theme';
 import Icon from '../../components/Icon';
 import { Avatar, NavBack, T, Tap, tapSuccess } from '../../components/ui';
 import { TEAMS } from './teams';
@@ -39,6 +39,11 @@ export default function Ekipler({ navigation }: ScreenProps<'Ekipler'>) {
             <Tap onPress={() => navigation.navigate('Olustur', { venueId: t.venueId, audience: 'karma' })} style={[styles.btn, { flex: 1, backgroundColor: C.tint }]}>
               <T w="b" size={14} color={C.primary}>Masa aç</T>
             </Tap>
+            {t.discord ? (
+              <Tap onPress={() => Linking.openURL(t.discord!).catch(() => {})} accessibilityLabel={`${t.name} Discord sunucusu`} style={[styles.btn, { width: 44, backgroundColor: DISCORD }]}>
+                <Icon name="discord" size={20} color="#FFFFFF" />
+              </Tap>
+            ) : null}
           </View>
         </View>
       ))}

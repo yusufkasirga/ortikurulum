@@ -17,10 +17,12 @@ export default function Kayit({ navigation, route }: ScreenProps<'Kayit'>) {
   const insets = useSafeAreaInsets();
   const { set } = useSession();
   const viaApple = route.params?.method === 'apple';
-  const steps: Step[] = viaApple ? ['kampus', 'eposta', 'izin'] : ['kampus', 'telefon', 'kod', 'eposta', 'izin'];
+  const onlyMail = route.params?.only === 'eposta';
+  const session = useSession();
+  const steps: Step[] = onlyMail ? ['eposta'] : viaApple ? ['kampus', 'eposta', 'izin'] : ['kampus', 'telefon', 'kod', 'eposta', 'izin'];
   const [i, setI] = React.useState(0);
   const step = steps[i];
-  const [campus, setCampus] = React.useState('eru');
+  const [campus, setCampus] = React.useState(onlyMail ? session.campusId : 'eru');
   const [waitlisted, setWaitlisted] = React.useState<string | undefined>();
   const [phone, setPhone] = React.useState('');
   const [code, setCode] = React.useState('');
@@ -57,7 +59,9 @@ export default function Kayit({ navigation, route }: ScreenProps<'Kayit'>) {
     }
     if (step === 'eposta') {
       setBusy(true); const r = await sendStudentMail(mail.trim()); setBusy(false);
-      if (r.ok) next(); else setErr('E-posta gönderilemedi.');
+      if (!r.ok) { setErr('E-posta gönderilemedi.'); return; }
+      if (onlyMail) { session.set({ studentEmail: mail.trim() }); tapSuccess(); navigation.goBack(); return; }
+      next();
     }
   };
 
@@ -139,8 +143,8 @@ export default function Kayit({ navigation, route }: ScreenProps<'Kayit'>) {
               <TextInput value={mail} onChangeText={setMail} keyboardType="email-address" autoCapitalize="none" autoCorrect={false}
                 placeholder={`ad.soyad@${c.domain}`} placeholderTextColor={C.text2} accessibilityLabel="Öğrenci e-postası" style={styles.input} />
             </View>
-            <Tap onPress={next} style={{ alignSelf: 'flex-start', minHeight: 40, justifyContent: 'center' }}>
-              <T w="s" size={15} color={C.primary}>Şimdilik atla</T>
+            <Tap onPress={onlyMail ? () => navigation.goBack() : next} style={{ alignSelf: 'flex-start', minHeight: 40, justifyContent: 'center' }}>
+              <T w="s" size={15} color={C.primary}>{onlyMail ? "Vazgeç" : "Şimdilik atla"}</T>
             </Tap>
           </>
         ) : null}

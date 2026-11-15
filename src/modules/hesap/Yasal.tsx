@@ -50,7 +50,7 @@ export default function Yasal({ navigation, route }: ScreenProps<'Yasal'>) {
   const d = DOCS[route.params.doc];
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#FFFFFF' }} contentContainerStyle={{ paddingTop: insets.top + 4, paddingHorizontal: 20, paddingBottom: insets.bottom + 40, gap: 16 }}>
-      <View style={{ marginLeft: -8 }}><NavBack label="Ayarlar" onPress={() => navigation.goBack()} /></View>
+      <View style={{ marginLeft: -8 }}><NavBack label="Geri" onPress={() => navigation.goBack()} /></View>
       <T w="x" size={28} style={{ letterSpacing: -0.6 }} accessibilityRole="header">{d.title}</T>
       <View style={{ backgroundColor: C.warnBg, borderRadius: 12, padding: 12 }}>
         <T w="s" size={13} color={C.warnText}>Taslak metin — yayından önce hukuk incelemesi gerekir.</T>

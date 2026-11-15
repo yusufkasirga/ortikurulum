@@ -1,6 +1,6 @@
 /// <reference types="jest" />
 import { contrast } from './contrast';
-import { C } from '../src/core/theme';
+import { C, DISCORD, DISCORD_TINT } from '../src/core/theme';
 import { CAT_META } from '../src/modules/mekan/venues';
 import { MODULES } from '../src/core/modules';
 import { MY_LESSONS, EVENTS } from '../src/modules/kampus/data';
@@ -27,6 +27,9 @@ describe('Renk kontrastı (WCAG AAA ≥ 7:1)', () => {
     ['sarı üstü koyu metin', C.sunText, C.sun],
     ['uyarı metni', C.warnText, C.warnBg],
     ['kalp sayacı', C.heartText, '#FFFFFF'],
+    ['Discord butonu yazısı', '#FFFFFF', DISCORD],
+    ['Discord etiketi', DISCORD, DISCORD_TINT],
+    ['Discord link / zemin', DISCORD, C.bg],
   ];
   it.each(textPairs)('%s', (_n, fg, bg) => {
     expect(contrast(fg, bg)).toBeGreaterThanOrEqual(AAA);
