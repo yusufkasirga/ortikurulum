@@ -39,7 +39,7 @@ jobs:
           # pre-build the iOS bundle so the first open is fast
           curl -s -o /dev/null -m 900 "http://127.0.0.1:8081/index.bundle?platform=ios&dev=true&hot=false&lazy=true&transform.engine=hermes" || true
           curl -s -H "expo-platform: ios" -H "accept: application/expo+json,application/json" "https://$HOST/" | head -c 600; echo
-          python3 -c "import qrcode,os; qrcode.make('exps://'+os.environ['HOST']).save('orti-qr.png')"
+          HOST=$HOST python3 -c "import qrcode,os; qrcode.make('exps://'+os.environ['HOST']).save('orti-qr.png')"
       - name: Publish link
         env:
           GH_TOKEN: ${{ github.token }}
