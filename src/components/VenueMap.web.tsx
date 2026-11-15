@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { C } from '../theme';
+import { C } from '../core/theme';
 import Icon from './Icon';
 import { T, Tap } from './ui';
-import { CAT_META, PILOT_REGION } from '../venues';
+import { CAT_META, PILOT_REGION } from '../modules/mekan/venues';
 import type { VenueMapProps } from './VenueMap';
 
 /** Web preview only: plots venues on a plain grid so layouts can be checked in a browser. */

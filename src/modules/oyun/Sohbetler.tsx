@@ -1,9 +1,9 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { C } from '../theme';
-import { Card, GameTile, NavBack, Sep, T, Tap } from '../components/ui';
-import type { ScreenProps } from '../navigation';
+import { C } from '../../core/theme';
+import { Card, GameTile, NavBack, Sep, T, Tap } from '../../components/ui';
+import type { ScreenProps } from '../../core/navigation';
 
 const CHATS = [
   { id: 'okey', mark: 'O', bg: '#1F8A4C', title: '101 Okey · Arena', last: 'Elif: Ben 5 dk gecikebilirim, taşları dizin.', time: '20:58', unread: 2 },

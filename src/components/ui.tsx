@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import Svg, { Circle, Rect } from 'react-native-svg';
-import { C, F, Weight } from '../theme';
+import { C, F, Weight } from '../core/theme';
 import Icon from './Icon';
 
 export function T({ w = 'r', size = 16, color = C.text, style, ...rest }: TextProps & { w?: Weight; size?: number; color?: string }) {
@@ -148,11 +148,11 @@ export function Sep({ inset = 16 }: { inset?: number }) {
   return <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: C.sep, marginLeft: inset }} />;
 }
 
-export function NavBack({ label, onPress }: { label: string; onPress: () => void }) {
+export function NavBack({ label, onPress, color = C.primary }: { label: string; onPress: () => void; color?: string }) {
   return (
     <Tap onPress={onPress} accessibilityLabel={label} style={{ flexDirection: 'row', alignItems: 'center', minHeight: 44, paddingRight: 8 }}>
-      <Icon name="back" color={C.primary} size={24} strokeWidth={2.6} />
-      <T size={17} color={C.primary}>{label}</T>
+      <Icon name="back" color={color} size={24} strokeWidth={2.6} />
+      <T size={17} color={color}>{label}</T>
     </Tap>
   );
 }

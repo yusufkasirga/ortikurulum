@@ -2,12 +2,12 @@ import React from 'react';
 import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { C } from '../theme';
-import Icon from '../components/Icon';
-import VenueMap from '../components/VenueMap';
-import { T, Tap, tapLight } from '../components/ui';
-import { CAT_META, OpenTable, SMOKING_LABEL, Venue, VenueCat, VENUES, distanceKm, fmtKm } from '../venues';
-import type { TabParams } from '../navigation';
+import { C } from '../../core/theme';
+import Icon from '../../components/Icon';
+import VenueMap from '../../components/VenueMap';
+import { T, Tap, tapLight } from '../../components/ui';
+import { CAT_META, OpenTable, SMOKING_LABEL, Venue, VenueCat, VENUES, distanceKm, fmtKm } from './venues';
+import type { TabParams } from '../../core/navigation';
 
 type Filter = 'all' | VenueCat;
 const FILTERS: { id: Filter; label: string }[] = [
@@ -22,13 +22,14 @@ const FILTERS: { id: Filter; label: string }[] = [
 
 const TAB_BAR = 84;
 
-export default function Harita({ navigation }: BottomTabScreenProps<TabParams, 'Harita'>) {
+export default function Harita({ navigation, route }: BottomTabScreenProps<TabParams, 'Harita'>) {
   const insets = useSafeAreaInsets();
   const root = navigation.getParent();
   const [filter, setFilter] = React.useState<Filter>('all');
   const [onlyOpen, setOnlyOpen] = React.useState(false);
   const [noSmoke, setNoSmoke] = React.useState(false);
   const [selected, setSelected] = React.useState<string | undefined>();
+  React.useEffect(() => { if (route.params?.filter) { setFilter(route.params.filter); setSelected(undefined); } }, [route.params?.filter]);
 
   const venues = VENUES.filter((v) =>
     (filter === 'all' || v.cat === filter || (filter === 'bilardo' && v.games.some((x) => x.value === 'Bilardo'))) &&

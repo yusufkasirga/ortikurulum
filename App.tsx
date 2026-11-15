@@ -8,8 +8,8 @@ import { Inter_500Medium } from '@expo-google-fonts/inter/500Medium';
 import { Inter_600SemiBold } from '@expo-google-fonts/inter/600SemiBold';
 import { Inter_700Bold } from '@expo-google-fonts/inter/700Bold';
 import { Inter_800ExtraBold } from '@expo-google-fonts/inter/800ExtraBold';
-import RootNavigation from './src/navigation';
-import { SessionProvider } from './src/store';
+import RootNavigation from './src/core/navigation';
+import { SessionProvider } from './src/core/store';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 

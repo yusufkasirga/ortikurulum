@@ -1,10 +1,10 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { C } from '../theme';
-import Icon from '../components/Icon';
-import { Avatar, Chip, PrimaryButton, Stars, T, Tap, tapLight, tapSuccess } from '../components/ui';
-import type { ScreenProps } from '../navigation';
+import { C } from '../../core/theme';
+import Icon from '../../components/Icon';
+import { Avatar, Chip, PrimaryButton, Stars, T, Tap, tapLight, tapSuccess } from '../../components/ui';
+import type { ScreenProps } from '../../core/navigation';
 
 const PEOPLE = [
   { id: 'mk', i: 'MK', bg: '#FFD8B5', name: 'Mehmet K.', hint: 'Masanın kurucusu', noShow: false },
@@ -31,7 +31,7 @@ export default function Degerlendir({ navigation }: ScreenProps<'Degerlendir'>) 
           <View style={styles.okCircle}><Icon name="check" color={C.green} size={44} strokeWidth={2.6} /></View>
           <T w="x" size={26} style={{ letterSpacing: -0.5 }}>Teşekkürler!</T>
           <T size={16} color={C.text2} style={{ textAlign: 'center', lineHeight: 23 }}>
-            Puanların kaydedildi. {Object.values(again).filter(Boolean).length} kişi oyun arkadaşlarına eklendi; bir sonraki masada önce onlara haber vereceğiz.
+            Puanların kaydedildi. {Object.values(again).filter(Boolean).length} kişi “Perşembe Okey Ekibi”ne eklendi; bir sonraki masada önce onlara haber vereceğiz.
           </T>
         </View>
         <PrimaryButton title="Keşfet'e dön" onPress={goHome} />

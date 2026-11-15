@@ -2,10 +2,10 @@ import React from 'react';
 import { Animated, Easing, ScrollView, StyleSheet, View, AccessibilityInfo } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Circle } from 'react-native-svg';
-import { C } from '../theme';
-import Icon from '../components/Icon';
-import { Avatar, Chip, GameTile, Logo, NavBack, PrimaryButton, SectionLabel, Segmented, T, Tap, tapSuccess } from '../components/ui';
-import type { ScreenProps } from '../navigation';
+import { C } from '../../core/theme';
+import Icon from '../../components/Icon';
+import { Avatar, Chip, GameTile, Logo, NavBack, PrimaryButton, SectionLabel, Segmented, T, Tap, tapSuccess } from '../../components/ui';
+import type { ScreenProps } from '../../core/navigation';
 
 const GAMES: [string, string][] = [
   ['okey', 'Okey'], ['tavla', 'Tavla'], ['bilardo', 'Bilardo'], ['batak', 'Batak'],

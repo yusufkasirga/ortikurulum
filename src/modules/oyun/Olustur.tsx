@@ -1,12 +1,12 @@
 import React from 'react';
 import { ScrollView, StyleSheet, TextInput, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { C, F } from '../theme';
-import Icon from '../components/Icon';
-import { Card, GameTile, SectionLabel, Segmented, Sep, T, Tap, Toggle, tapLight, tapSuccess } from '../components/ui';
-import { CAT_META, VENUES, Venue, VenueCat, venueById } from '../venues';
-import { useSession } from '../store';
-import type { ScreenProps } from '../navigation';
+import { C, F } from '../../core/theme';
+import Icon from '../../components/Icon';
+import { Card, GameTile, SectionLabel, Segmented, Sep, T, Tap, Toggle, tapLight, tapSuccess } from '../../components/ui';
+import { CAT_META, VENUES, Venue, VenueCat, venueById } from '../mekan/venues';
+import { useSession } from '../../core/store';
+import type { ScreenProps } from '../../core/navigation';
 
 type Mode = 'masa' | 'online';
 type Join = 'approve' | 'instant';

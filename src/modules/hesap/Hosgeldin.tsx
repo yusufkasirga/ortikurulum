@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { C } from '../theme';
-import Icon, { IconName } from '../components/Icon';
-import { Logo, PrimaryButton, T } from '../components/ui';
-import type { ScreenProps } from '../navigation';
+import { C } from '../../core/theme';
+import Icon, { IconName } from '../../components/Icon';
+import { Logo, PrimaryButton, T } from '../../components/ui';
+import type { ScreenProps } from '../../core/navigation';
 
 const FEATURES: { icon: IconName; title: string; sub: string }[] = [
   { icon: 'pin', title: 'Yakınındaki masalar', sub: 'Eksiği olan grupları anlık gör' },

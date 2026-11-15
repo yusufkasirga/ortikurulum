@@ -2,12 +2,18 @@ import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { C } from '../theme';
-import Icon from '../components/Icon';
-import { Avatar, Logo, T, Tap } from '../components/ui';
-import { freeWindows, todayIndex } from '../campus';
-import { CAT_META, FEATURED, OpenTable, Venue, VENUES, VenueCat, distanceKm, fmtKm } from '../venues';
-import type { TabParams } from '../navigation';
+import { C } from '../../core/theme';
+import Icon from '../../components/Icon';
+import { Avatar, Logo, T, Tap } from '../../components/ui';
+import ModuleTile from '../../components/ModuleTile';
+import { MODULES } from '../../core/modules';
+import { useSession } from '../../core/store';
+import { useOpenModule } from '../../core/useOpenModule';
+import { useWindowDimensions } from 'react-native';
+import { NEXT_TABLE } from '../oyun/teams';
+import { freeWindows, todayIndex } from '../kampus/data';
+import { CAT_META, FEATURED, OpenTable, Venue, VENUES, VenueCat, distanceKm, fmtKm } from '../mekan/venues';
+import type { TabParams } from '../../core/navigation';
 
 type Cat = 'all' | 'masa' | 'ps' | 'spor';
 const CATS: { id: Cat; label: string; cats: VenueCat[]; color: string; tint: string; ink: string }[] = [
@@ -22,6 +28,11 @@ const FREE = freeWindows(todayIndex())[0];
 export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, 'Kesfet'>) {
   const insets = useSafeAreaInsets();
   const [cat, setCat] = React.useState<Cat>('all');
+  const { modules } = useSession();
+  const openModule = useOpenModule();
+  const { width } = useWindowDimensions();
+  const tileW = Math.floor((width - 40 - 20) / 3);
+  const shownModules = MODULES.filter((m) => modules[m.id] && m.id !== 'eslesme');
   const root = navigation.getParent();
   const sel = CATS.find((c) => c.id === cat)!;
   const list = cat === 'all' ? ALL : ALL.filter(({ v }) => sel.cats.includes(v.cat));
@@ -56,6 +67,20 @@ export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, '
         </Tap>
       </View>
 
+      <Countdown onOpen={() => root?.navigate('Sohbet')} onQr={() => root?.navigate('QrCheckin', { venueId: NEXT_TABLE.venueId })} />
+
+      <View style={{ gap: 10 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <T w="b" size={22} style={{ letterSpacing: -0.4 }} accessibilityRole="header">Modüller</T>
+          <Tap onPress={() => root?.navigate('Moduller')} style={{ minHeight: 32, justifyContent: 'center' }}><T w="s" size={15} color={C.primary}>Düzenle</T></Tap>
+        </View>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
+          {shownModules.map((m) => (
+            <ModuleTile key={m.id} m={m} width={tileW} onPress={() => openModule(m)} badge={m.id === 'sohbet' ? '2' : m.id === 'etkinlik' ? 'Yeni' : undefined} />
+          ))}
+        </View>
+      </View>
+
       <Tap haptic="medium" onPress={() => root?.navigate('HizliEsles')} style={styles.hero}>
         <View style={[styles.deco, { width: 120, height: 150, right: -24, top: -36, transform: [{ rotate: '18deg' }] }]} />
         <View style={[styles.deco, { width: 80, height: 104, right: 70, bottom: -50, transform: [{ rotate: '-14deg' }] }]} />
@@ -67,7 +92,7 @@ export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, '
         <View style={styles.heroGo}><Icon name="chevRight" color="#FFFFFF" size={16} strokeWidth={3} /></View>
       </Tap>
 
-      {FREE ? (
+      {FREE && modules.program ? (
         <Tap onPress={() => navigation.navigate('Kampus')} style={styles.freeCard}>
           <View style={styles.freeIcon}><Icon name="calendar" size={22} color="#05605F" /></View>
           <View style={{ flex: 1 }}>
@@ -78,7 +103,7 @@ export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, '
         </Tap>
       ) : null}
 
-      <View style={{ gap: 10 }}>
+      {modules.firsatlar ? <View style={{ gap: 10 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <T w="b" size={22} style={{ letterSpacing: -0.4 }} accessibilityRole="header">Öne çıkan mekanlar</T>
           <T w="s" size={12} color={C.text2}>Reklam</T>
@@ -86,7 +111,7 @@ export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, '
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -20 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 12 }} snapToInterval={292} decelerationRate="fast">
           {FEATURED.map((v) => <FeaturedCard key={v.id} v={v} onPress={() => root?.navigate('Mekan', { id: v.id })} />)}
         </ScrollView>
-      </View>
+      </View> : null}
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -20 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 8 }}>
         {CATS.map((c) => {
@@ -100,14 +125,6 @@ export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, '
         })}
       </ScrollView>
 
-      <Tap onPress={() => navigation.navigate('Harita')} style={styles.mapCard}>
-        <View style={styles.mapIcon}><Icon name="map" color={C.primary} size={24} /></View>
-        <View style={{ flex: 1 }}>
-          <T w="s" size={16}>Haritada gör</T>
-          <T size={13} color={C.text2}>{VENUES.length} mekan · okey, PlayStation, bilardo, halı saha</T>
-        </View>
-        <Icon name="chevRight" color={C.chevron} size={14} strokeWidth={3} />
-      </Tap>
 
       <T w="b" size={22} style={{ letterSpacing: -0.4 }} accessibilityRole="header">Yakınındaki eksikler</T>
 
@@ -124,6 +141,27 @@ export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, '
         ) : null}
       </View>
     </ScrollView>
+  );
+}
+
+/** Upcoming-table countdown (in-app twin of the iOS Live Activity). */
+function Countdown({ onOpen, onQr }: { onOpen: () => void; onQr: () => void }) {
+  const [left, setLeft] = React.useState(NEXT_TABLE.minutesFromNow * 60);
+  React.useEffect(() => { const i = setInterval(() => setLeft((x) => Math.max(0, x - 1)), 1000); return () => clearInterval(i); }, []);
+  const mm = String(Math.floor(left / 60)).padStart(2, '0');
+  const ss = String(left % 60).padStart(2, '0');
+  return (
+    <Tap onPress={onOpen} style={styles.live} accessibilityLabel={`Yaklaşan masa: ${NEXT_TABLE.game}, ${NEXT_TABLE.venue}, ${mm} dakika kaldı`}>
+      <View style={styles.liveTile}><Icon name="tiles" size={20} color="#FFF" strokeWidth={2} /></View>
+      <View style={{ flex: 1 }}>
+        <T w="s" size={12} color="rgba(255,255,255,0.65)">SIRADAKİ MASAN · {NEXT_TABLE.seats}</T>
+        <T w="b" size={15} color="#FFF" numberOfLines={1}>{NEXT_TABLE.game} · {NEXT_TABLE.venue}</T>
+      </View>
+      <View style={{ alignItems: 'flex-end', gap: 4 }}>
+        <T w="x" size={22} color={C.sun} style={{ fontVariant: ['tabular-nums'] }}>{mm}:{ss}</T>
+        <Tap onPress={onQr} style={styles.liveQr}><T w="b" size={11} color="#241200">QR check-in</T></Tap>
+      </View>
+    </Tap>
   );
 }
 
@@ -203,6 +241,9 @@ const styles = StyleSheet.create({
   deco: { position: 'absolute', borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.35)' },
   heroIcon: { width: 50, height: 50, borderRadius: 16, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' },
   heroGo: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#241200', alignItems: 'center', justifyContent: 'center' },
+  live: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: '#14121F', borderRadius: 22, padding: 14 },
+  liveTile: { width: 42, height: 42, borderRadius: 13, backgroundColor: '#14A44D', alignItems: 'center', justifyContent: 'center' },
+  liveQr: { backgroundColor: C.sun, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 },
   freeCard: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: '#DBF5F4', borderRadius: 18, padding: 14 },
   freeIcon: { width: 44, height: 44, borderRadius: 13, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' },
   livePill: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', backgroundColor: C.greenBg, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 999, marginTop: 4 },

@@ -1,10 +1,10 @@
 import React from 'react';
 import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { C, F } from '../theme';
-import Icon from '../components/Icon';
-import { Avatar, Card, PrimaryButton, SectionLabel, Sep, T, Tap, Toggle, tapLight, tapSuccess } from '../components/ui';
-import type { ScreenProps } from '../navigation';
+import { C, F } from '../../core/theme';
+import Icon from '../../components/Icon';
+import { Avatar, Card, PrimaryButton, SectionLabel, Sep, T, Tap, Toggle, tapLight, tapSuccess } from '../../components/ui';
+import type { ScreenProps } from '../../core/navigation';
 
 const REASONS = [
   { id: 'noshow', label: 'Gelmedi / son anda iptal etti', sub: 'Masayı eksik bıraktı' },

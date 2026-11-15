@@ -1,11 +1,11 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { C } from '../theme';
-import Icon, { IconName } from '../components/Icon';
-import { Card, PrimaryButton, SectionLabel, Segmented, Sep, T, Tap, tapLight, tapSuccess } from '../components/ui';
-import { Gender, useSession } from '../store';
-import type { ScreenProps } from '../navigation';
+import { C } from '../../core/theme';
+import Icon, { IconName } from '../../components/Icon';
+import { Card, PrimaryButton, SectionLabel, Segmented, Sep, T, Tap, tapLight, tapSuccess } from '../../components/ui';
+import { Gender, useSession } from '../../core/store';
+import type { ScreenProps } from '../../core/navigation';
 
 type Step = 'intro' | 'id' | 'selfie' | 'checking' | 'done';
 

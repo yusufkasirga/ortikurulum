@@ -1,11 +1,11 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { C } from '../theme';
-import Icon from '../components/Icon';
-import { Card, GameTile, SectionLabel, Sep, T, Tap } from '../components/ui';
-import type { ScreenProps } from '../navigation';
-import { NavBack } from '../components/ui';
+import { C } from '../../core/theme';
+import Icon from '../../components/Icon';
+import { Card, GameTile, SectionLabel, Sep, T, Tap } from '../../components/ui';
+import type { ScreenProps } from '../../core/navigation';
+import { NavBack } from '../../components/ui';
 
 export default function Masalarim({ navigation }: ScreenProps<'Masalarim'>) {
   const insets = useSafeAreaInsets();

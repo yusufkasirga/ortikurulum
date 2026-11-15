@@ -1,11 +1,11 @@
 import React from 'react';
 import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { C } from '../theme';
-import Icon from '../components/Icon';
-import { Card, NavBack, PrimaryButton, SectionLabel, Sep, T, Tap, tapSuccess } from '../components/ui';
-import { CAT_META, SMOKING_LABEL, VENUES, distanceKm, fmtKm, venueById } from '../venues';
-import type { ScreenProps } from '../navigation';
+import { C } from '../../core/theme';
+import Icon from '../../components/Icon';
+import { Card, NavBack, PrimaryButton, SectionLabel, Sep, T, Tap, tapSuccess } from '../../components/ui';
+import { CAT_META, SMOKING_LABEL, VENUES, distanceKm, fmtKm, venueById } from './venues';
+import type { ScreenProps } from '../../core/navigation';
 
 const SRC_LABEL = { yorum: 'Kullanıcı yorumlarından', isim: 'Mekan kategorisinden', isletme: 'İşletmeden' } as const;
 

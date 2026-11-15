@@ -2,13 +2,13 @@ import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Circle } from 'react-native-svg';
-import { C } from '../theme';
-import Icon from '../components/Icon';
-import { Avatar, Card, GameTile, Segmented, Sep, T, Tap } from '../components/ui';
-import { RECENT_GAMES } from '../data';
-import { useSession } from '../store';
+import { C } from '../../core/theme';
+import Icon from '../../components/Icon';
+import { Avatar, Card, GameTile, Segmented, Sep, T, Tap } from '../../components/ui';
+import { RECENT_GAMES } from '../oyun/data';
+import { useSession } from '../../core/store';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import type { TabParams } from '../navigation';
+import type { TabParams } from '../../core/navigation';
 
 const PRAISE = [
   { label: 'Centilmen', count: 41 },
@@ -97,6 +97,12 @@ export default function Profil({ navigation }: BottomTabScreenProps<TabParams, '
         <Tap onPress={() => root?.navigate('Masalarim')} style={styles.row}>
           <Icon name="table" size={20} color={C.primary} />
           <T size={16} style={{ flex: 1 }}>Masalarım</T>
+          <Icon name="chevRight" color={C.chevron} size={14} strokeWidth={3} />
+        </Tap>
+        <Sep inset={48} />
+        <Tap onPress={() => root?.navigate('Moduller')} style={styles.row}>
+          <Icon name="list" size={20} color={C.primary} />
+          <T size={16} style={{ flex: 1 }}>Modüller</T>
           <Icon name="chevRight" color={C.chevron} size={14} strokeWidth={3} />
         </Tap>
       </Card>

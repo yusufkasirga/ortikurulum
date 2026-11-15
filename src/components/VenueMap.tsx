@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps';
-import { C } from '../theme';
+import { C } from '../core/theme';
 import Icon from './Icon';
 import { T } from './ui';
-import { CAT_META, PILOT_REGION, Venue } from '../venues';
+import { CAT_META, PILOT_REGION, Venue } from '../modules/mekan/venues';
 
 export type VenueMapProps = {
   venues: Venue[];

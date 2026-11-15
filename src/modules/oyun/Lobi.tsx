@@ -1,15 +1,15 @@
 import React from 'react';
 import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { C } from '../theme';
-import Icon, { IconName } from '../components/Icon';
-import { Avatar, Card, NavBack, PrimaryButton, SectionLabel, Sep, T, Tap, tapSuccess } from '../components/ui';
-import { ME, TABLE_PLAYERS } from '../data';
-import { CAT_META, VENUES, distanceKm, fmtKm, venueById } from '../venues';
-import { useSession } from '../store';
-import { ME_CAMPUS, bolumOf } from '../campus';
-import { SmokeFact } from './Harita';
-import type { ScreenProps } from '../navigation';
+import { C } from '../../core/theme';
+import Icon, { IconName } from '../../components/Icon';
+import { Avatar, Card, NavBack, PrimaryButton, SectionLabel, Sep, T, Tap, tapSuccess } from '../../components/ui';
+import { ME, TABLE_PLAYERS } from './data';
+import { CAT_META, VENUES, distanceKm, fmtKm, venueById } from '../mekan/venues';
+import { useSession } from '../../core/store';
+import { ME_CAMPUS, bolumOf } from '../kampus/data';
+import { SmokeFact } from '../mekan/Harita';
+import type { ScreenProps } from '../../core/navigation';
 
 type Stage = 'idle' | 'requested' | 'approved';
 

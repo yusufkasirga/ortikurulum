@@ -1,10 +1,10 @@
 import React from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, type ScrollViewInstance, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { C, F } from '../theme';
-import Icon from '../components/Icon';
-import { Avatar, GameTile, T, Tap, tapLight, tapSuccess } from '../components/ui';
-import type { ScreenProps } from '../navigation';
+import { C, F } from '../../core/theme';
+import Icon from '../../components/Icon';
+import { Avatar, GameTile, T, Tap, tapLight, tapSuccess } from '../../components/ui';
+import type { ScreenProps } from '../../core/navigation';
 
 type Msg =
   | { id: string; kind: 'sys'; text: string }
@@ -63,9 +63,9 @@ export default function Sohbet({ navigation }: ScreenProps<'Sohbet'>) {
             <Icon name="pin" color={C.primary} size={22} />
             <View style={{ flex: 1 }}>
               <T w="s" size={15} color={C.tintText}>Mekâna 120 m uzaktasın</T>
-              <T size={13} color={C.primaryDark}>Varınca check-in yap, dakiklik puanın korunsun</T>
+              <T size={13} color={C.primaryDark}>Varınca masadaki QR’ı okut: check-in + ilk çaylar ikram</T>
             </View>
-            <Tap haptic="medium" onPress={checkIn} style={styles.bannerBtn}><T w="s" size={14} color="#FFFFFF">Oradayım</T></Tap>
+            <Tap haptic="medium" onPress={() => { checkIn(); navigation.navigate('QrCheckin', { venueId: 'arena' }); }} style={styles.bannerBtn}><T w="s" size={14} color="#FFFFFF">QR okut</T></Tap>
           </View>
         ) : (
           <View style={[styles.banner, { backgroundColor: C.greenBg }]} accessibilityLiveRegion="polite">

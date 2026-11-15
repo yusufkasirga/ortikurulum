@@ -6,26 +6,38 @@ import { createBottomTabNavigator, BottomTabBarProps } from '@react-navigation/b
 import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { C } from './theme';
-import Icon, { IconName } from './components/Icon';
-import { T, Tap, tapMedium } from './components/ui';
+import Icon, { IconName } from '../components/Icon';
+import { T, Tap, tapMedium } from '../components/ui';
 
-import Hosgeldin from './screens/Hosgeldin';
-import Kesfet from './screens/Kesfet';
-import Masalarim from './screens/Masalarim';
-import Sohbetler from './screens/Sohbetler';
-import Profil from './screens/Profil';
-import HizliEsles from './screens/HizliEsles';
-import Lobi from './screens/Lobi';
-import Sohbet from './screens/Sohbet';
-import Olustur from './screens/Olustur';
-import Degerlendir from './screens/Degerlendir';
-import Sikayet from './screens/Sikayet';
-import Harita from './screens/Harita';
-import Mekan from './screens/Mekan';
-import Dogrulama from './screens/Dogrulama';
-import Kampus from './screens/Kampus';
+import Hosgeldin from '../modules/hesap/Hosgeldin';
+import Kesfet from '../modules/kesfet/Kesfet';
+import Masalarim from '../modules/oyun/Masalarim';
+import Sohbetler from '../modules/oyun/Sohbetler';
+import Profil from '../modules/hesap/Profil';
+import HizliEsles from '../modules/oyun/HizliEsles';
+import Lobi from '../modules/oyun/Lobi';
+import Sohbet from '../modules/oyun/Sohbet';
+import Olustur from '../modules/oyun/Olustur';
+import Degerlendir from '../modules/oyun/Degerlendir';
+import Sikayet from '../modules/oyun/Sikayet';
+import Harita from '../modules/mekan/Harita';
+import Mekan from '../modules/mekan/Mekan';
+import Dogrulama from '../modules/hesap/Dogrulama';
+import Kampus from '../modules/kampus/Kampus';
+import NotDetay from '../modules/kampus/NotDetay';
+import Moduller from '../modules/hesap/Moduller';
+import Firsatlar from '../modules/mekan/Firsatlar';
+import Ekipler from '../modules/oyun/Ekipler';
+import Lig from '../modules/oyun/Lig';
+import QrCheckin from '../modules/oyun/QrCheckin';
 
-export type TabParams = { Kesfet: undefined; Harita: undefined; Ekle: undefined; Kampus: undefined; Profil: undefined };
+export type TabParams = {
+  Kesfet: undefined;
+  Harita: { filter?: 'halisaha' } | undefined;
+  Ekle: undefined;
+  Kampus: { tab?: 'program' | 'calisma' | 'etkinlik' | 'notlar' } | undefined;
+  Profil: undefined;
+};
 export type RootParams = {
   Hosgeldin: undefined;
   Tabs: NavigatorScreenParams<TabParams> | undefined;
@@ -39,6 +51,12 @@ export type RootParams = {
   Sohbetler: undefined;
   Degerlendir: undefined;
   Sikayet: { name?: string } | undefined;
+  Moduller: undefined;
+  Firsatlar: undefined;
+  NotDetay: { id: string };
+  Ekipler: undefined;
+  Lig: undefined;
+  QrCheckin: { venueId?: string } | undefined;
 };
 export type ScreenProps<K extends keyof RootParams> = NativeStackScreenProps<RootParams, K>;
 
@@ -144,6 +162,12 @@ export default function RootNavigation() {
         <Stack.Screen name="Mekan" component={Mekan} />
         <Stack.Screen name="Masalarim" component={Masalarim} />
         <Stack.Screen name="Sohbetler" component={Sohbetler} />
+        <Stack.Screen name="Moduller" component={Moduller} />
+        <Stack.Screen name="Firsatlar" component={Firsatlar} />
+        <Stack.Screen name="NotDetay" component={NotDetay} />
+        <Stack.Screen name="Ekipler" component={Ekipler} />
+        <Stack.Screen name="Lig" component={Lig} />
+        <Stack.Screen name="QrCheckin" component={QrCheckin} options={{ presentation: 'fullScreenModal', animation: 'slide_from_bottom' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
