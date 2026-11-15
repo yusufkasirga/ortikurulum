@@ -21,7 +21,10 @@ jobs:
           curl -sL -o cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
           chmod +x cloudflared
       - name: Start tunnel + Metro
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
+          if [ -z "$EXPO_TOKEN" ]; then echo "EXPO_TOKEN secret missing"; exit 1; fi
           nohup ./cloudflared tunnel --no-autoupdate --url http://localhost:8081 > tunnel.log 2>&1 &
           for i in $(seq 1 30); do
             sleep 3
