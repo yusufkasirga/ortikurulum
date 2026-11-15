@@ -11,8 +11,22 @@
       "bundleIdentifier": "app.orti.mobile",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "NSCameraUsageDescription": "Masadaki QR kodu okutup check-in yapmak ve kimlik doğrulaması için kamera kullanılır.",
-        "NSLocationWhenInUseUsageDescription": "Yakındaki masaları göstermek ve mekâna vardığında check-in yapabilmek için konumun kullanılır."
+        "CFBundleAllowMixedLocalizations": true
+      },
+      "usesAppleSignIn": true,
+      "buildNumber": "1",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "privacyManifests": {
+        "NSPrivacyAccessedAPITypes": [
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+            "NSPrivacyAccessedAPITypeReasons": [
+              "CA92.1"
+            ]
+          }
+        ]
       }
     },
     "android": {
@@ -24,7 +38,20 @@
       },
       "predictiveBackGestureEnabled": false,
       "package": "app.orti.mobile",
-      "versionCode": 1
+      "versionCode": 1,
+      "permissions": [
+        "POST_NOTIFICATIONS",
+        "VIBRATE"
+      ],
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.CAMERA",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -45,7 +72,8 @@
         {
           "color": "#401FE2"
         }
-      ]
+      ],
+      "expo-apple-authentication"
     ],
     "scheme": "orti",
     "owner": "mirrormedya",
@@ -62,6 +90,8 @@
       "enabled": true,
       "checkAutomatically": "ON_LOAD",
       "fallbackToCacheTimeout": 0
-    }
+    },
+    "description": "Eksiği olan oyun grubunu tamamla: okey, tavla, bilardo, PlayStation, halı saha. Kampüs çevresindeki masaları haritada gör, katıl, oyun sonunda puanla.",
+    "githubUrl": "https://github.com/yusufkasirga/ortikurulum"
   }
 }

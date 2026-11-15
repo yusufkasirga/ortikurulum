@@ -17,6 +17,7 @@ export default function Ayarlar({ navigation }: ScreenProps<'Ayarlar'>) {
   const s = useSession();
   const [confirm, setConfirm] = React.useState<0 | 1 | 2>(0);
   const [typed, setTyped] = React.useState(false);
+  const [taps, setTaps] = React.useState(0);
   const campus = campusById(s.campusId);
 
   const exportData = async () => {
@@ -91,6 +92,7 @@ export default function Ayarlar({ navigation }: ScreenProps<'Ayarlar'>) {
         <Row icon="person" title="Topluluk Kuralları" onPress={() => navigation.navigate('Yasal', { doc: 'topluluk' })} />
       </Group>
 
+      {s.moderatorDemo ? (
       <Group title="Yönetim (rol bazlı)">
         <Row icon="flag" title="Moderasyon" value="Moderatör" onPress={() => navigation.navigate('Moderasyon')} />
         <Sep inset={50} />
@@ -98,6 +100,7 @@ export default function Ayarlar({ navigation }: ScreenProps<'Ayarlar'>) {
         <Sep inset={50} />
         <Row icon="star" title="Kulüp paneli" value="Kulüp yöneticisi" onPress={() => navigation.navigate('KulupPaneli')} />
       </Group>
+      ) : null}
 
       <Group title="Hesap">
         <Row icon="upload" title="Verilerimi indir" onPress={exportData} />
@@ -127,9 +130,11 @@ export default function Ayarlar({ navigation }: ScreenProps<'Ayarlar'>) {
         )}
       </Group>
 
+      <Tap onPress={() => { const n = taps + 1; setTaps(n); if (n >= 7) { s.set({ moderatorDemo: !s.moderatorDemo }); setTaps(0); } }} accessibilityLabel="Sürüm bilgisi">
       <T size={12} color={C.text2} style={{ textAlign: 'center', lineHeight: 18 }}>
         Orti {Constants.expoConfig?.version ?? '1.0.0'} · {isLive ? 'Canlı sunucu' : 'Demo veri'} · {campus.name}
       </T>
+      </Tap>
     </ScrollView>
   );
 }

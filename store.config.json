@@ -1,0 +1,61 @@
+{
+  "configVersion": 0,
+  "apple": {
+    "copyright": "2026 [ŞİRKET UNVANI]",
+    "categories": [
+      "SOCIAL_NETWORKING",
+      "GAMES"
+    ],
+    "advisory": {
+      "alcoholTobaccoOrDrugUseOrReferences": "INFREQUENT_OR_MILD",
+      "contests": "NONE",
+      "gamblingSimulated": "NONE",
+      "horrorOrFearThemes": "NONE",
+      "matureOrSuggestiveThemes": "NONE",
+      "medicalOrTreatmentInformation": "NONE",
+      "profanityOrCrudeHumor": "NONE",
+      "sexualContentGraphicAndNudity": "NONE",
+      "sexualContentOrNudity": "NONE",
+      "violenceCartoonOrFantasy": "NONE",
+      "violenceRealistic": "NONE",
+      "violenceRealisticProlongedGraphicOrSadistic": "NONE",
+      "gambling": false,
+      "unrestrictedWebAccess": false,
+      "kidsAgeBand": null,
+      "seventeenPlus": true
+    },
+    "info": {
+      "tr": {
+        "title": "Orti: Oyun Arkadaşı Bul",
+        "subtitle": "Okey, halı saha, kampüs",
+        "description": "Eksik mi var? Orti tamamlar.\n\nÜç kişisiniz, okey için dördüncüyü mü arıyorsunuz? Halı saha maçına iki kişi mi eksik? Orti, kampüs çevresindeki oyun masalarını haritada gösterir; eksiği olan gruba dakikalar içinde katılırsın.\n\nMASALAR HARİTADA\n• Okey, tavla, bilardo, PlayStation, halı saha, bowling ve online oyunlar\n• Mekanların puanı, fiyatları, oyunları ve sigara bilgisi tek ekranda\n• Öne çıkan kafelerin kampanyaları\n\nGÜVENLE OYNA\n• Herkesin bir güven skoru var; gelmeyen ve son anda iptal eden düşer\n• Oyun sonunda oyuncuları puanla, gerekirse şikayet et ve engelle\n• Kadın masaları yalnızca kimliği doğrulanmış kadın oyunculara açık\n• Konumun kimseye gösterilmez\n\nKAMPÜS HAYATI\n• Ders programına göre boş saatine uygun masalar\n• Kütüphanede aynı dersi çalışan biriyle eşleş\n• Kulüp etkinlikleri ve “birlikte gidelim” eşleşmesi\n• Bölümüne göre ders notları\n\nEKİBİN, LİGİN\n• Sürekli oynadığın grubu ekip yap, tek dokunuşla çağır\n• Talas Okey Ligi’nde sıralamaya gir\n\nPilot bölge: Kayseri, Talas · Erciyes Üniversitesi çevresi. Diğer kampüsler için bekleme listesine katılabilirsin.\n\nOrti’yi kullanmak için 18 yaşını doldurmuş olman gerekir.",
+        "keywords": [
+          "okey",
+          "tavla",
+          "bilardo",
+          "halı saha",
+          "oyun arkadaşı",
+          "kampüs",
+          "üniversite",
+          "erciyes",
+          "kayseri",
+          "playstation"
+        ],
+        "promoText": "Okey için dördüncü mü lazım? Kampüs çevresindeki masaları haritada gör, eksik grubu tamamla.",
+        "releaseNotes": "Orti’nin ilk sürümü. Talas ve Erciyes Üniversitesi çevresinde yayında.",
+        "marketingUrl": "https://yusufkasirga.github.io/ortikurulum/",
+        "supportUrl": "https://yusufkasirga.github.io/ortikurulum/destek.html",
+        "privacyPolicyUrl": "https://yusufkasirga.github.io/ortikurulum/gizlilik.html"
+      }
+    },
+    "review": {
+      "firstName": "[AD]",
+      "lastName": "[SOYAD]",
+      "email": "[E-POSTA]",
+      "phone": "+90 [TELEFON]",
+      "demoUsername": "5320000000",
+      "demoPassword": "123456",
+      "notes": "Telefon numarası ile giriş: 5320000000, SMS kodu: 123456 (inceleme hesabı). Kampüs olarak Erciyes Üniversitesi seçin; öğrenci e-postası adımı “Şimdilik atla” ile geçilebilir. Kullanıcı içeriği için: her profilde ve sohbette Şikayet et / Engelle vardır, şikayetler moderasyon ekibince 24 saat içinde incelenir; Kullanım Koşulları ve Topluluk Kuralları girişte kabul edilir. Hesap silme: Profil › Ayarlar ve gizlilik › Hesabımı sil. Kimlik doğrulama yalnızca kadın masaları için isteğe bağlıdır."
+    }
+  }
+}

@@ -64,7 +64,7 @@ export type RootParams = {
   Ekipler: undefined;
   Lig: undefined;
   QrCheckin: { venueId?: string } | undefined;
-  Kayit: { method?: 'apple' | 'telefon' } | undefined;
+  Kayit: { method?: 'apple' | 'telefon'; appleToken?: string; name?: string } | undefined;
   Ayarlar: undefined;
   Yasal: { doc: 'kvkk' | 'kosullar' | 'topluluk' };
   Moderasyon: undefined;

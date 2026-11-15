@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { Platform, View, StyleSheet } from 'react-native';
+import * as AppleAuthentication from 'expo-apple-authentication';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { C } from '../../core/theme';
 import Icon, { IconName } from '../../components/Icon';
@@ -14,6 +15,22 @@ const FEATURES: { icon: IconName; title: string; sub: string }[] = [
 
 export default function Hosgeldin({ navigation }: ScreenProps<'Hosgeldin'>) {
   const insets = useSafeAreaInsets();
+  const [appleOk, setAppleOk] = React.useState(false);
+  React.useEffect(() => {
+    if (Platform.OS === 'ios') AppleAuthentication.isAvailableAsync().then(setAppleOk).catch(() => setAppleOk(false));
+  }, []);
+
+  const signInWithApple = async () => {
+    try {
+      const cred = await AppleAuthentication.signInAsync({
+        requestedScopes: [AppleAuthentication.AppleAuthenticationScope.FULL_NAME, AppleAuthentication.AppleAuthenticationScope.EMAIL],
+      });
+      // Live: pass cred.identityToken to Supabase auth.signInWithIdToken({ provider: 'apple', token }).
+      navigation.navigate('Kayit', { method: 'apple', appleToken: cred.identityToken ?? undefined, name: cred.fullName?.givenName ?? undefined });
+    } catch (e) {
+      if ((e as { code?: string }).code !== 'ERR_REQUEST_CANCELED') navigation.navigate('Kayit', { method: 'telefon' });
+    }
+  };
 
   return (
     <View style={[styles.root, { paddingTop: insets.top + 32, paddingBottom: insets.bottom + 20 }]}>
@@ -40,8 +57,16 @@ export default function Hosgeldin({ navigation }: ScreenProps<'Hosgeldin'>) {
         </View>
       </View>
       <View style={{ gap: 10 }}>
-        <PrimaryButton title="Apple ile devam et" color="#000000" onPress={() => navigation.navigate('Kayit', { method: 'apple' })} />
-        <PrimaryButton title="Telefon numarasıyla devam et" color={C.bg} textColor={C.text} onPress={() => navigation.navigate('Kayit', { method: 'telefon' })} />
+        {appleOk ? (
+          <AppleAuthentication.AppleAuthenticationButton
+            buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
+            buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+            cornerRadius={16}
+            style={{ height: 54 }}
+            onPress={signInWithApple}
+          />
+        ) : null}
+        <PrimaryButton title="Telefon numarasıyla devam et" color={appleOk ? C.bg : C.primary} textColor={appleOk ? C.text : '#FFFFFF'} onPress={() => navigation.navigate('Kayit', { method: 'telefon' })} />
         <T size={12} color={C.text2} style={{ textAlign: 'center', marginTop: 6, lineHeight: 17 }}>
           Devam ederek Kullanım Koşulları ve Topluluk Kuralları’nı kabul edersin. Kişisel verilerin KVKK Aydınlatma Metni’ne göre işlenir.
         </T>
