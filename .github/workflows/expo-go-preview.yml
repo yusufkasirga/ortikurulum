@@ -25,6 +25,9 @@ jobs:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
           if [ -z "$EXPO_TOKEN" ]; then echo "EXPO_TOKEN secret missing"; exit 1; fi
+          npx expo whoami > diag.txt 2>&1 || true
+          npx -y eas-cli@latest init --non-interactive --force >> diag.txt 2>&1 || true
+          grep -o '"projectId": *"[^"]*"' app.json >> diag.txt || echo "no projectId" >> diag.txt
           nohup ./cloudflared tunnel --no-autoupdate --url http://localhost:8081 > tunnel.log 2>&1 &
           for i in $(seq 1 30); do
             sleep 3
@@ -41,20 +44,21 @@ jobs:
           done
           # pre-build the iOS bundle so the first open is fast
           curl -s -o /dev/null -m 900 "http://127.0.0.1:8081/index.bundle?platform=ios&dev=true&hot=false&lazy=true&transform.engine=hermes" || true
-          curl -s -H "expo-platform: ios" -H "accept: application/expo+json,application/json" "https://$HOST/" | head -c 600; echo
+          curl -s -H "expo-platform: ios" -H "accept: multipart/mixed,application/expo+json,application/json" "http://127.0.0.1:8081/" > manifest.txt || true
+          tail -30 metro.log >> diag.txt
           HOST=$HOST python3 -c "import qrcode,os; qrcode.make('exps://'+os.environ['HOST']).save('orti-qr.png')"
       - name: Publish link
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           TAG="expo-go-${{ github.run_number }}"
-          gh release create "$TAG" orti-qr.png --prerelease --title "Expo Go önizleme #${{ github.run_number }}" --notes "exps://$HOST" --repo "${{ github.repository }}"
+          gh release create "$TAG" orti-qr.png diag.txt manifest.txt --prerelease --title "Expo Go önizleme #${{ github.run_number }}" --notes "exps://$HOST" --repo "${{ github.repository }}"
       - name: Upload logs on failure
         if: failure()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          touch tunnel.log metro.log
-          gh release create "log-${{ github.run_number }}" tunnel.log metro.log --prerelease --title "log" --notes "log" --repo "${{ github.repository }}"
+          touch tunnel.log metro.log diag.txt
+          gh release create "log-${{ github.run_number }}" tunnel.log metro.log diag.txt --prerelease --title "log" --notes "log" --repo "${{ github.repository }}"
       - name: Keep server alive
         run: sleep 6000
