@@ -15,29 +15,43 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm install --no-save @expo/ngrok@^4.1.0
       - run: pip install qrcode pillow
-      - name: Start Metro with tunnel
+      - name: Install cloudflared
         run: |
-          nohup npx expo start --tunnel --go > metro.log 2>&1 &
-          for i in $(seq 1 60); do
-            sleep 5
-            URL=$(curl -s http://127.0.0.1:4040/api/tunnels | python3 -c "import sys,json; t=json.load(sys.stdin)['tunnels']; print([x['public_url'] for x in t if x['public_url'].startswith('https')][0])" 2>/dev/null || true)
-            if [ -n "$URL" ]; then break; fi
+          curl -sL -o cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+          chmod +x cloudflared
+      - name: Start tunnel + Metro
+        run: |
+          nohup ./cloudflared tunnel --no-autoupdate --url http://localhost:8081 > tunnel.log 2>&1 &
+          for i in $(seq 1 30); do
+            sleep 3
+            HOST=$(grep -oE 'https://[a-z0-9-]+\.trycloudflare\.com' tunnel.log | head -1 | sed 's#https://##')
+            [ -n "$HOST" ] && break
           done
-          cat metro.log | tail -40
-          if [ -z "$URL" ]; then echo "no tunnel"; exit 1; fi
-          HOST=${URL#https://}
-          EXP="exp://$HOST"
-          echo "EXP=$EXP" >> $GITHUB_ENV
-          # warm up the Android/iOS bundle so first open is fast
-          curl -s -o /dev/null -m 600 "http://127.0.0.1:8081/index.bundle?platform=ios&dev=true&minify=false" || true
-          python3 -c "import qrcode,os; qrcode.make(os.environ['EXP']).save('orti-qr.png')"
+          echo "HOST=$HOST"
+          [ -z "$HOST" ] && { cat tunnel.log; exit 1; }
+          echo "HOST=$HOST" >> $GITHUB_ENV
+          EXPO_PACKAGER_PROXY_URL="https://$HOST" nohup npx expo start --go --port 8081 > metro.log 2>&1 &
+          for i in $(seq 1 60); do
+            sleep 3
+            curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8081/status | grep -q 200 && break
+          done
+          # pre-build the iOS bundle so the first open is fast
+          curl -s -o /dev/null -m 900 "http://127.0.0.1:8081/index.bundle?platform=ios&dev=true&hot=false&lazy=true&transform.engine=hermes" || true
+          curl -s -H "expo-platform: ios" -H "accept: application/expo+json,application/json" "https://$HOST/" | head -c 600; echo
+          python3 -c "import qrcode,os; qrcode.make('exps://'+os.environ['HOST']).save('orti-qr.png')"
       - name: Publish link
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           TAG="expo-go-${{ github.run_number }}"
-          gh release create "$TAG" orti-qr.png --prerelease --title "Expo Go önizleme #${{ github.run_number }}" --notes "$EXP" --repo "${{ github.repository }}"
+          gh release create "$TAG" orti-qr.png --prerelease --title "Expo Go önizleme #${{ github.run_number }}" --notes "exps://$HOST" --repo "${{ github.repository }}"
+      - name: Upload logs on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          touch tunnel.log metro.log
+          gh release create "log-${{ github.run_number }}" tunnel.log metro.log --prerelease --title "log" --notes "log" --repo "${{ github.repository }}"
       - name: Keep server alive
         run: sleep 6000
