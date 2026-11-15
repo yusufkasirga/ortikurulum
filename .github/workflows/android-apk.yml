@@ -3,6 +3,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,3 +28,10 @@ jobs:
         with:
           name: orti-apk
           path: android/app/build/outputs/apk/release/*.apk
+      - name: Publish APK as release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp android/app/build/outputs/apk/release/app-release.apk orti.apk
+          TAG="build-${{ github.run_number }}"
+          gh release create "$TAG" orti.apk --title "Orti APK #${{ github.run_number }}" --notes "Otomatik derleme" --repo "${{ github.repository }}"
