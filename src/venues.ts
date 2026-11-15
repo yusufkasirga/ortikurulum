@@ -46,16 +46,18 @@ export type Venue = {
   warnings: string[];
   google?: { rating: number; count: number; placeId: string };
   partner?: boolean;
+  /** Paid/partner placement. Must always be labelled as advertising in the UI. Offers are DEMO copy until signed. */
+  featured?: { offer: string; detail: string };
   tables: OpenTable[];
 };
 
-export const CAT_META: Record<VenueCat, { label: string; color: string; icon: 'tiles' | 'gamepad' | 'cue' | 'cup' | 'ball' | 'bowling' }> = {
-  okey: { label: 'Okey salonu', color: '#1F8A4C', icon: 'tiles' },
-  playstation: { label: 'PlayStation', color: '#3A2FB8', icon: 'gamepad' },
-  bilardo: { label: 'Bilardo', color: '#1C1C1E', icon: 'cue' },
-  kafe: { label: 'Kafe · kutu oyunu', color: '#A35200', icon: 'cup' },
-  halisaha: { label: 'Halı saha', color: '#0B7A6E', icon: 'ball' },
-  bowling: { label: 'Bowling', color: '#B0234A', icon: 'bowling' },
+export const CAT_META: Record<VenueCat, { label: string; color: string; tint: string; ink: string; icon: 'tiles' | 'gamepad' | 'cue' | 'cup' | 'ball' | 'bowling' }> = {
+  okey: { label: 'Okey salonu', color: '#14A44D', tint: '#E1F7E8', ink: '#0B5C2B', icon: 'tiles' },
+  playstation: { label: 'PlayStation', color: '#6D4AFF', tint: '#ECE7FF', ink: '#3A1FB0', icon: 'gamepad' },
+  bilardo: { label: 'Bilardo', color: '#1E293B', tint: '#E4E8EF', ink: '#1E293B', icon: 'cue' },
+  kafe: { label: 'Kafe · kutu oyunu', color: '#F2711C', tint: '#FFEBDC', ink: '#8A3A05', icon: 'cup' },
+  halisaha: { label: 'Halı saha', color: '#0EA5A4', tint: '#DBF5F4', ink: '#05605F', icon: 'ball' },
+  bowling: { label: 'Bowling', color: '#E8398A', tint: '#FDE3EF', ink: '#8A1450', icon: 'bowling' },
 };
 
 export const SMOKING_LABEL: Record<Smoking, string> = {
@@ -79,6 +81,7 @@ export const VENUES: Venue[] = [
     prices: [{ label: 'Masa ücreti', value: 'Var (bir yorumda oturduktan sonra söylendiği belirtilmiş)', src: 'yorum' }],
     highlights: ['Akıllı okey masaları', 'Öğrenci ve aile kitlesi'], warnings: ['Bazı yorumlarda havasız ve sigara kokulu'],
     google: { rating: 3.8, count: 33, placeId: 'ChIJ4W6Tu-UTKxURZrCM4MpTd9M' }, partner: true,
+    featured: { offer: 'Orti’den gelen masaya ilk çaylar ikram', detail: 'Masada QR’ı okut, garsona göster. Hafta içi her gün.' },
     tables: [
       { id: 't1', game: '101 Okey', need: 1, total: 4, time: 'Bugün 21:30', host: 'Mehmet K.', hostTrust: 98, level: 'Orta' },
       { id: 't2', game: 'Okey (eşli)', need: 2, total: 4, time: 'Yarın 20:00', host: 'Burak T.', hostTrust: 93 },
@@ -120,6 +123,7 @@ export const VENUES: Venue[] = [
     hookah: { value: true, src: 'yorum' }, prices: [],
     highlights: ['Üst katta VIP odalar', 'Yemekleri övülüyor', 'Öğrencilerin takıldığı yeni bir mekan'], warnings: [],
     google: { rating: 4.8, count: 51, placeId: 'ChIJ6bgdLpETKxURZ9iO8prGW-M' }, partner: true,
+    featured: { offer: 'PlayStation saatlik ücretinde öğrenciye %15', detail: 'Öğrenci kartını göstermen yeterli. 14:00–18:00 arası.' },
     tables: [{ id: 't5', game: 'EA FC · 1v1', need: 1, total: 2, time: 'Şimdi', host: 'Cem Y.', hostTrust: 89 }],
   },
   {
@@ -133,6 +137,7 @@ export const VENUES: Venue[] = [
     hours: '09:00–00:00', games: [g('Kutu oyunları (ücretsiz)', 'yorum')], smoking: { value: 'bilinmiyor' }, prices: [],
     highlights: ['Sakin, ders çalışmaya uygun', 'Kahvesi övülüyor'], warnings: [],
     google: { rating: 4.8, count: 57, placeId: 'ChIJTV6Ac-0NKxUR3_6mSVZbPlM' },
+    featured: { offer: 'Perşembe 20:00 kutu oyunu gecesi', detail: 'Oyunları ekip anlatıyor, yeni gelenlere masa ayarlanıyor.' },
     tables: [{ id: 't6', game: 'Catan', need: 2, total: 4, time: 'Bugün 19:30', host: 'Zeynep S.', hostTrust: 97, level: 'Yeni başlayana açık' }],
   },
   {
@@ -179,6 +184,7 @@ export const VENUES: Venue[] = [
     prices: [{ label: 'PlayStation', value: 'Bir yorumda 95 TL/saat, VIP oda ~125–130 TL', src: 'yorum' }],
     highlights: ['VIP odalar', 'İkram çay', 'Sabah 05:00’e kadar açık'], warnings: [],
     google: { rating: 4.2, count: 48, placeId: 'ChIJIdTGL4UTKxURz5qo0v02CMM' },
+    featured: { offer: 'Gece 00:00 sonrası 2 saat al, 3 saat oyna', detail: 'E-spor PC ve PlayStation odalarında geçerli.' },
     tables: [{ id: 't8', game: 'Valorant · 5’li', need: 2, total: 5, time: 'Bugün 23:00', host: 'Kaan D.', hostTrust: 92, level: 'Altın+' }],
   },
   {
@@ -210,6 +216,7 @@ export const VENUES: Venue[] = [
     hours: '09:00–00:00', games: [g('Halı saha')], smoking: { value: 'acik-alan', src: 'isim' }, prices: [],
     highlights: ['İki kamerayla maç kaydı', 'Zemin iyi (yorumlar)'], warnings: ['Kiralık kramponlar kötü (yorum)'],
     google: { rating: 3.7, count: 150, placeId: 'ChIJ42rl_yITKxURPDhCPMO7NGo' },
+    featured: { offer: 'Hafta içi 14:00–17:00 öğrenci tarifesi', detail: 'Maç kaydı dahil. Takımın eksikse Orti’den tamamla.' },
     tables: [{ id: 't9', game: 'Halı saha · 7v7', need: 3, total: 14, time: 'Yarın 20:00', host: 'Ali K.', hostTrust: 95 }],
   },
   {
@@ -225,6 +232,8 @@ export const VENUES: Venue[] = [
     google: { rating: 3.9, count: 354, placeId: 'ChIJFxXD-nwNKxURcoIxaCOsAXg' }, tables: [],
   },
 ];
+
+export const FEATURED = VENUES.filter((v) => v.featured);
 
 export const venueById = (id?: string) => VENUES.find((v) => v.id === id);
 

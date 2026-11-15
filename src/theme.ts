@@ -1,5 +1,5 @@
 export const C = {
-  bg: '#F2F2F7',
+  bg: '#F4F3FA',
   card: '#FFFFFF',
   text: '#1C1C1E',
   text2: '#6E6E73',
@@ -7,11 +7,11 @@ export const C = {
   sep: 'rgba(60,60,67,0.29)',
   sepLight: 'rgba(60,60,67,0.18)',
   fill: 'rgba(118,118,128,0.12)',
-  primary: '#4B3FD9',
-  primaryDark: '#3A2FB8',
-  tint: '#F1EFFE',
-  tint2: '#E4E0FC',
-  tintText: '#2E2591',
+  primary: '#5B3FE6',
+  primaryDark: '#4329C9',
+  tint: '#EFEBFF',
+  tint2: '#E2DBFF',
+  tintText: '#33208F',
   green: '#146C34',
   greenBg: '#DDF5E4',
   greenDot: '#34C759',
@@ -25,7 +25,14 @@ export const C = {
   gray: '#8E8E93',
   chevron: '#C7C7CC',
   heart: '#FF2D55',
-  bubble: '#E9E9EB',
+  bubble: '#ECEBF3',
+  // playful accents
+  sun: '#FFC83D',
+  sunText: '#7A5200',
+  coral: '#FF6B5B',
+  lime: '#B8F35A',
+  sky: '#3EC7FF',
+  pink: '#FF5FA2',
 };
 
 export const F = {

@@ -5,15 +5,15 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { C } from '../theme';
 import Icon from '../components/Icon';
 import { Avatar, Logo, T, Tap } from '../components/ui';
-import { CAT_META, OpenTable, Venue, VENUES, VenueCat, distanceKm, fmtKm } from '../venues';
+import { CAT_META, FEATURED, OpenTable, Venue, VENUES, VenueCat, distanceKm, fmtKm } from '../venues';
 import type { TabParams } from '../navigation';
 
 type Cat = 'all' | 'masa' | 'ps' | 'spor';
-const CATS: { id: Cat; label: string; cats: VenueCat[] }[] = [
-  { id: 'all', label: 'Tümü', cats: [] },
-  { id: 'masa', label: 'Okey · masa oyunu', cats: ['okey', 'kafe', 'bilardo'] },
-  { id: 'ps', label: 'PlayStation · e-spor', cats: ['playstation'] },
-  { id: 'spor', label: 'Halı saha · bowling', cats: ['halisaha', 'bowling'] },
+const CATS: { id: Cat; label: string; cats: VenueCat[]; color: string; tint: string; ink: string }[] = [
+  { id: 'all', label: 'Hepsi', cats: [], color: '#1C1C1E', tint: '#FFFFFF', ink: '#1C1C1E' },
+  { id: 'masa', label: 'Okey · masa', cats: ['okey', 'kafe', 'bilardo'], color: CAT_META.okey.color, tint: CAT_META.okey.tint, ink: CAT_META.okey.ink },
+  { id: 'ps', label: 'PlayStation', cats: ['playstation'], color: CAT_META.playstation.color, tint: CAT_META.playstation.tint, ink: CAT_META.playstation.ink },
+  { id: 'spor', label: 'Halı saha · bowling', cats: ['halisaha', 'bowling'], color: CAT_META.halisaha.color, tint: CAT_META.halisaha.tint, ink: CAT_META.halisaha.ink },
 ];
 const ALL = VENUES.flatMap((v) => v.tables.map((t) => ({ v, t })));
 
@@ -45,31 +45,43 @@ export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, '
         </View>
       </View>
 
-      <View style={{ gap: 4 }}>
-        <T w="x" size={34} style={{ letterSpacing: -0.8 }} accessibilityRole="header">Keşfet</T>
-        <Tap style={{ flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', minHeight: 28 }}>
+      <View style={{ gap: 6 }}>
+        <T w="s" size={15} color={C.text2}>Selam Deniz</T>
+        <T w="x" size={32} style={{ letterSpacing: -1, lineHeight: 36 }} accessibilityRole="header">Bu akşam{'\n'}ne oynuyoruz?</T>
+        <Tap style={styles.livePill}>
           <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: C.greenDot }} />
-          <T w="m" size={15} color={C.text2}>Talas · ERÜ çevresinde {ALL.length} açık masa</T>
-          <Icon name="chevDown" size={12} color={C.text2} strokeWidth={2.6} />
+          <T w="s" size={13} color={C.green}>Talas · ERÜ çevresinde {ALL.length} açık masa</T>
         </Tap>
       </View>
 
       <Tap haptic="medium" onPress={() => root?.navigate('HizliEsles')} style={styles.hero}>
-        <View style={styles.heroIcon}><Icon name="bolt" color="#FFFFFF" size={26} /></View>
+        <View style={[styles.deco, { width: 120, height: 150, right: -24, top: -36, transform: [{ rotate: '18deg' }] }]} />
+        <View style={[styles.deco, { width: 80, height: 104, right: 70, bottom: -50, transform: [{ rotate: '-14deg' }] }]} />
+        <View style={styles.heroIcon}><Icon name="bolt" color={C.sunText} size={26} /></View>
         <View style={{ flex: 1, gap: 2 }}>
-          <T w="b" size={18} color="#FFFFFF">Hızlı Eşleş</T>
-          <T size={14} color={C.tint2} style={{ lineHeight: 19 }}>Oyununu seç, seni uygun masaya oturtalım.</T>
+          <T w="x" size={20} color="#241200" style={{ letterSpacing: -0.4 }}>Hızlı Eşleş</T>
+          <T w="m" size={14} color="#4A3100" style={{ lineHeight: 19 }}>Oyununu seç, 30 saniyede{'\n'}seni masaya oturtalım.</T>
         </View>
-        <Icon name="chevRight" color="#FFFFFF" size={16} strokeWidth={3} />
+        <View style={styles.heroGo}><Icon name="chevRight" color="#FFFFFF" size={16} strokeWidth={3} /></View>
       </Tap>
+
+      <View style={{ gap: 10 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <T w="b" size={22} style={{ letterSpacing: -0.4 }} accessibilityRole="header">Öne çıkan mekanlar</T>
+          <T w="s" size={12} color={C.text2}>Reklam</T>
+        </View>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -20 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 12 }} snapToInterval={292} decelerationRate="fast">
+          {FEATURED.map((v) => <FeaturedCard key={v.id} v={v} onPress={() => root?.navigate('Mekan', { id: v.id })} />)}
+        </ScrollView>
+      </View>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -20 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 8 }}>
         {CATS.map((c) => {
           const on = c.id === cat;
           return (
             <Tap key={c.id} haptic="light" onPress={() => setCat(c.id)} accessibilityState={{ selected: on }}
-              style={[styles.cat, { backgroundColor: on ? C.text : '#FFFFFF' }]}>
-              <T w="s" size={15} color={on ? '#FFFFFF' : C.text}>{c.label}</T>
+              style={[styles.cat, { backgroundColor: on ? c.color : c.tint }]}>
+              <T w="b" size={14} color={on ? '#FFFFFF' : c.ink}>{c.label}</T>
             </Tap>
           );
         })}
@@ -99,6 +111,28 @@ export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, '
         ) : null}
       </View>
     </ScrollView>
+  );
+}
+
+function FeaturedCard({ v, onPress }: { v: Venue; onPress: () => void }) {
+  const meta = CAT_META[v.cat];
+  const open = v.tables.reduce((n, t) => n + t.need, 0);
+  return (
+    <Tap onPress={onPress} style={[styles.feat, { backgroundColor: meta.color }]} accessibilityLabel={`Reklam. ${v.name}. ${v.featured?.offer}`}>
+      <View style={[styles.featDeco, { transform: [{ rotate: '-16deg' }] }]}><Icon name={meta.icon} color="rgba(255,255,255,0.22)" size={130} strokeWidth={1.6} /></View>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <View style={styles.featTag}><T w="b" size={11} color={meta.ink}>{meta.label.toUpperCase()}</T></View>
+        {open ? <View style={styles.featOpen}><View style={{ width: 7, height: 7, borderRadius: 4, backgroundColor: C.lime }} /><T w="b" size={12} color="#FFF">{open} kişi aranıyor</T></View> : null}
+      </View>
+      <View style={{ flex: 1 }} />
+      <T w="x" size={21} color="#FFFFFF" numberOfLines={1} style={{ letterSpacing: -0.4 }}>{v.name}</T>
+      <View style={styles.offer}><T w="b" size={14} color="#241200" numberOfLines={2}>{v.featured?.offer}</T></View>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+        {v.google ? <T w="s" size={13} color="#FFFFFF">★ {v.google.rating.toFixed(1).replace('.', ',')}</T> : null}
+        <T w="s" size={13} color="rgba(255,255,255,0.9)">{fmtKm(distanceKm(v.lat, v.lng))}</T>
+        <T w="s" size={13} color="rgba(255,255,255,0.9)" numberOfLines={1} style={{ flex: 1 }}>{v.area.split(' · ')[0]}</T>
+      </View>
+    </Tap>
   );
 }
 
@@ -132,7 +166,7 @@ function LobbyCard({ v, t, onPress }: { v: Venue; t: OpenTable; onPress: () => v
           ))}
         </View>
         <View style={{ alignItems: 'flex-end', gap: 4 }}>
-          <View style={styles.need}><T w="s" size={12} color={C.tintText}>{t.need} kişi aranıyor</T></View>
+          <View style={[styles.need, { backgroundColor: meta.tint }]}><T w="b" size={12} color={meta.ink}>{t.need} kişi aranıyor</T></View>
           <T w="s" size={13} color={urgent ? C.urgent : C.text3}>{t.time}</T>
         </View>
       </View>
@@ -150,11 +184,19 @@ const styles = StyleSheet.create({
   roundBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' },
   dot: { position: 'absolute', top: 8, right: 9, width: 10, height: 10, borderRadius: 5, backgroundColor: C.badge, borderWidth: 2, borderColor: '#FFFFFF' },
   hero: {
-    flexDirection: 'row', alignItems: 'center', gap: 14, padding: 18, borderRadius: 22, backgroundColor: C.primary,
-    shadowColor: C.primary, shadowOpacity: 0.28, shadowRadius: 16, shadowOffset: { width: 0, height: 10 }, elevation: 6,
+    flexDirection: 'row', alignItems: 'center', gap: 14, padding: 18, borderRadius: 24, backgroundColor: C.sun, overflow: 'hidden',
+    shadowColor: '#C78A00', shadowOpacity: 0.3, shadowRadius: 14, shadowOffset: { width: 0, height: 8 }, elevation: 6,
   },
-  heroIcon: { width: 48, height: 48, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.18)', alignItems: 'center', justifyContent: 'center' },
-  cat: { height: 36, paddingHorizontal: 16, borderRadius: 999, alignItems: 'center', justifyContent: 'center' },
+  deco: { position: 'absolute', borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.35)' },
+  heroIcon: { width: 50, height: 50, borderRadius: 16, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' },
+  heroGo: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#241200', alignItems: 'center', justifyContent: 'center' },
+  livePill: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', backgroundColor: C.greenBg, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 999, marginTop: 4 },
+  feat: { width: 280, height: 196, borderRadius: 26, padding: 16, gap: 8, overflow: 'hidden' },
+  featDeco: { position: 'absolute', right: -26, top: -18 },
+  featTag: { backgroundColor: '#FFFFFF', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 },
+  featOpen: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: 'rgba(0,0,0,0.22)', paddingHorizontal: 9, paddingVertical: 5, borderRadius: 999 },
+  offer: { alignSelf: 'flex-start', backgroundColor: C.sun, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 10, maxWidth: '100%' },
+  cat: { height: 38, paddingHorizontal: 16, borderRadius: 999, alignItems: 'center', justifyContent: 'center' },
   card: { backgroundColor: '#FFFFFF', borderRadius: 22, padding: 16, gap: 14 },
   tile: { width: 48, height: 48, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
   women: { backgroundColor: '#FDE7F1', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6 },

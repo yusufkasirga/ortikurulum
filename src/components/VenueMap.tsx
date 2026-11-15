@@ -60,7 +60,7 @@ function VenuePin({ v, selected, onPress }: { v: Venue; selected: boolean; onPre
     >
       <View style={{ padding: 6, alignItems: 'center', justifyContent: 'center' }}>
         {v.tables.length ? <View style={[styles.halo, { width: size + 12, height: size + 12, borderRadius: (size + 12) / 2 }]} /> : null}
-        <View style={[styles.pin, { width: size, height: size, borderRadius: size / 2, backgroundColor: meta.color, borderWidth: selected ? 3 : 2 }]}>
+        <View style={[styles.pin, { width: size, height: size, borderRadius: size / 2, backgroundColor: meta.color, borderWidth: selected || v.featured ? 3 : 2, borderColor: v.featured ? '#FFC83D' : '#FFFFFF' }]}>
           <Icon name={meta.icon} color="#FFFFFF" size={selected ? 24 : 19} strokeWidth={2} />
         </View>
         {open ? (

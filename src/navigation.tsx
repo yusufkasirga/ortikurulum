@@ -88,13 +88,13 @@ function TabBar({ state, navigation }: BottomTabBarProps) {
             }}
             style={styles.tabItem}
           >
-            <View>
-              <Icon name={meta.icon} color={color} size={25} strokeWidth={2} />
+            <View style={[styles.tabIcon, focused && { backgroundColor: C.tint }]}>
+              <Icon name={meta.icon} color={color} size={24} strokeWidth={2} />
               {name === 'Sohbetler' ? (
                 <View style={styles.badge}><T w="b" size={11} color="#FFFFFF">2</T></View>
               ) : null}
             </View>
-            <T w="s" size={10} color={color} style={{ marginTop: 3 }}>{meta.label}</T>
+            <T w={focused ? 'b' : 's'} size={10} color={color} style={{ marginTop: 2 }}>{meta.label}</T>
           </Tap>
         );
       })}
@@ -154,5 +154,6 @@ const styles = StyleSheet.create({
     width: 52, height: 52, borderRadius: 26, backgroundColor: C.primary, alignItems: 'center', justifyContent: 'center',
     shadowColor: C.primary, shadowOpacity: 0.35, shadowRadius: 12, shadowOffset: { width: 0, height: 6 }, elevation: 6,
   },
-  badge: { position: 'absolute', top: -4, right: -10, minWidth: 18, height: 18, borderRadius: 9, backgroundColor: C.badge, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4 },
+  tabIcon: { width: 52, height: 30, borderRadius: 15, alignItems: 'center', justifyContent: 'center' },
+  badge: { position: 'absolute', top: -4, right: 0, minWidth: 18, height: 18, borderRadius: 9, backgroundColor: C.badge, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4 },
 });

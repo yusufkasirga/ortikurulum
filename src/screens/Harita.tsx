@@ -59,7 +59,7 @@ export default function Harita({ navigation }: BottomTabScreenProps<TabParams, '
           <FilterChip label="Masa arayanlar" icon="person" on={onlyOpen} onPress={() => setOnlyOpen((x) => !x)} green />
           <FilterChip label="Dumansız" icon="noSmoke" on={noSmoke} onPress={() => setNoSmoke((x) => !x)} />
           {FILTERS.map((f) => (
-            <FilterChip key={f.id} label={f.label} on={filter === f.id} onPress={() => { setFilter(f.id); setSelected(undefined); }} />
+            <FilterChip key={f.id} label={f.label} on={filter === f.id} color={f.id === 'all' ? undefined : CAT_META[f.id].color} onPress={() => { setFilter(f.id); setSelected(undefined); }} />
           ))}
         </ScrollView>
       </View>
@@ -104,12 +104,13 @@ export default function Harita({ navigation }: BottomTabScreenProps<TabParams, '
   );
 }
 
-function FilterChip({ label, on, onPress, icon, green }: { label: string; on: boolean; onPress: () => void; icon?: 'person' | 'noSmoke'; green?: boolean }) {
-  const bg = on ? (green ? C.green : C.text) : '#FFFFFF';
+function FilterChip({ label, on, onPress, icon, green, color }: { label: string; on: boolean; onPress: () => void; icon?: 'person' | 'noSmoke'; green?: boolean; color?: string }) {
+  const bg = on ? (green ? C.green : color ?? C.text) : '#FFFFFF';
   const fg = on ? '#FFFFFF' : C.text;
   return (
     <Tap haptic="light" onPress={onPress} accessibilityState={{ selected: on }} style={[styles.chip, { backgroundColor: bg }]}>
       {icon ? <Icon name={icon} size={15} color={fg} /> : null}
+      {color && !on ? <View style={{ width: 9, height: 9, borderRadius: 5, backgroundColor: color }} /> : null}
       <T w="s" size={14} color={fg}>{label}</T>
     </Tap>
   );
@@ -145,6 +146,13 @@ function VenueCard({ v, onClose, onOpen, onJoin, onCreate }: {
         {v.games.slice(0, 3).map((x) => <View key={x.value} style={styles.fact}><T size={13}>{x.value}</T></View>)}
       </View>
 
+      {v.featured ? (
+        <View style={styles.offerRow}>
+          <View style={styles.adTag}><T w="b" size={10} color={C.sunText}>REKLAM</T></View>
+          <T w="b" size={14} color="#241200" style={{ flex: 1 }} numberOfLines={2}>{v.featured.offer}</T>
+        </View>
+      ) : null}
+
       {v.tables.length ? (
         <View style={{ gap: 6 }}>
           {v.tables.slice(0, 2).map((t) => (
@@ -166,7 +174,7 @@ function VenueCard({ v, onClose, onOpen, onJoin, onCreate }: {
 
       <View style={{ flexDirection: 'row', gap: 8 }}>
         <Tap onPress={onOpen} style={styles.secondary}><Icon name="menu" size={17} color={C.primary} /><T w="s" size={15} color={C.primary}>Detay, fiyat, menü</T></Tap>
-        <Tap onPress={directions} style={[styles.secondary, { flex: 0, width: 52 }]} accessibilityLabel="Yol tarifi"><Icon name="directions" size={18} color={C.primary} /></Tap>
+        <Tap onPress={directions} style={styles.dirBtn} accessibilityLabel="Yol tarifi"><Icon name="directions" size={18} color={C.primary} /></Tap>
       </View>
     </View>
   );
@@ -218,6 +226,9 @@ const styles = StyleSheet.create({
   closeBtn: { width: 32, height: 32, borderRadius: 16, backgroundColor: C.bg, alignItems: 'center', justifyContent: 'center' },
   fact: { flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: C.bg, borderRadius: 9, paddingHorizontal: 9, paddingVertical: 6 },
   tableRow: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: C.tint, borderRadius: 14, padding: 10 },
+  offerRow: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: C.sun, borderRadius: 14, paddingHorizontal: 12, paddingVertical: 10 },
+  adTag: { backgroundColor: 'rgba(255,255,255,0.7)', paddingHorizontal: 6, paddingVertical: 3, borderRadius: 6 },
   joinBtn: { height: 36, paddingHorizontal: 16, borderRadius: 10, backgroundColor: C.primary, justifyContent: 'center' },
+  dirBtn: { width: 52, height: 44, borderRadius: 12, backgroundColor: C.tint, alignItems: 'center', justifyContent: 'center' },
   secondary: { flex: 1, height: 44, borderRadius: 12, backgroundColor: C.tint, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
 });

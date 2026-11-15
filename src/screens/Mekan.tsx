@@ -39,6 +39,17 @@ export default function Mekan({ navigation, route }: ScreenProps<'Mekan'>) {
           </View>
         </View>
 
+        {v.featured ? (
+          <View style={styles.offer}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <T w="b" size={12} color={C.sunText}>ORTİ'YE ÖZEL</T>
+              <T w="s" size={11} color={C.sunText}>Reklam</T>
+            </View>
+            <T w="x" size={19} color="#241200" style={{ letterSpacing: -0.3 }}>{v.featured.offer}</T>
+            <T size={14} color="#4A3100" style={{ lineHeight: 19 }}>{v.featured.detail}</T>
+          </View>
+        ) : null}
+
         <View style={{ flexDirection: 'row', gap: 10 }}>
           <Tap onPress={openGoogle} style={styles.stat} accessibilityLabel="Google puanı">
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
@@ -178,6 +189,7 @@ function Line({ text, good }: { text: string; good?: boolean }) {
 const styles = StyleSheet.create({
   nav: { paddingHorizontal: 12, paddingVertical: 4 },
   tile: { width: 68, height: 68, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
+  offer: { backgroundColor: C.sun, borderRadius: 20, padding: 16, gap: 6 },
   partner: { alignSelf: 'flex-start', backgroundColor: C.tint, paddingHorizontal: 7, paddingVertical: 3, borderRadius: 6 },
   stat: { flex: 1, backgroundColor: '#FFFFFF', borderRadius: 16, padding: 12, gap: 2 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 16, paddingVertical: 12 },
