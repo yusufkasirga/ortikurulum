@@ -5,6 +5,7 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { C } from '../theme';
 import Icon from '../components/Icon';
 import { Avatar, Logo, T, Tap } from '../components/ui';
+import { freeWindows, todayIndex } from '../campus';
 import { CAT_META, FEATURED, OpenTable, Venue, VENUES, VenueCat, distanceKm, fmtKm } from '../venues';
 import type { TabParams } from '../navigation';
 
@@ -16,6 +17,7 @@ const CATS: { id: Cat; label: string; cats: VenueCat[]; color: string; tint: str
   { id: 'spor', label: 'Halı saha · bowling', cats: ['halisaha', 'bowling'], color: CAT_META.halisaha.color, tint: CAT_META.halisaha.tint, ink: CAT_META.halisaha.ink },
 ];
 const ALL = VENUES.flatMap((v) => v.tables.map((t) => ({ v, t })));
+const FREE = freeWindows(todayIndex())[0];
 
 export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, 'Kesfet'>) {
   const insets = useSafeAreaInsets();
@@ -35,8 +37,8 @@ export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, '
           <T w="x" size={24} style={{ letterSpacing: -0.8 }}>orti</T>
         </View>
         <View style={{ flexDirection: 'row', gap: 8 }}>
-          <Tap accessibilityLabel="Bildirimler, 2 yeni" style={styles.roundBtn}>
-            <Icon name="bell" size={20} />
+          <Tap accessibilityLabel="Sohbetler, 2 okunmamış" onPress={() => root?.navigate('Sohbetler')} style={styles.roundBtn}>
+            <Icon name="chat" size={20} />
             <View style={styles.dot} />
           </Tap>
           <Tap accessibilityLabel="Profilim" onPress={() => navigation.navigate('Profil')}>
@@ -64,6 +66,17 @@ export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, '
         </View>
         <View style={styles.heroGo}><Icon name="chevRight" color="#FFFFFF" size={16} strokeWidth={3} /></View>
       </Tap>
+
+      {FREE ? (
+        <Tap onPress={() => navigation.navigate('Kampus')} style={styles.freeCard}>
+          <View style={styles.freeIcon}><Icon name="calendar" size={22} color="#05605F" /></View>
+          <View style={{ flex: 1 }}>
+            <T w="b" size={16} color="#05605F">Bugün {FREE.start}:00–{FREE.end}:00 arası boşsun</T>
+            <T size={13} color="#0B6E6D">Ders programına göre {ALL.length} masa uygun · bak</T>
+          </View>
+          <Icon name="chevRight" color="#05605F" size={14} strokeWidth={3} />
+        </Tap>
+      ) : null}
 
       <View style={{ gap: 10 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -190,6 +203,8 @@ const styles = StyleSheet.create({
   deco: { position: 'absolute', borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.35)' },
   heroIcon: { width: 50, height: 50, borderRadius: 16, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' },
   heroGo: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#241200', alignItems: 'center', justifyContent: 'center' },
+  freeCard: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: '#DBF5F4', borderRadius: 18, padding: 14 },
+  freeIcon: { width: 44, height: 44, borderRadius: 13, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' },
   livePill: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', backgroundColor: C.greenBg, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 999, marginTop: 4 },
   feat: { width: 280, height: 196, borderRadius: 26, padding: 16, gap: 8, overflow: 'hidden' },
   featDeco: { position: 'absolute', right: -26, top: -18 },

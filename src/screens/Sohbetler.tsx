@@ -1,10 +1,9 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { C } from '../theme';
-import { Card, GameTile, Sep, T, Tap } from '../components/ui';
-import type { TabParams } from '../navigation';
+import { Card, GameTile, NavBack, Sep, T, Tap } from '../components/ui';
+import type { ScreenProps } from '../navigation';
 
 const CHATS = [
   { id: 'okey', mark: 'O', bg: '#1F8A4C', title: '101 Okey · Arena', last: 'Elif: Ben 5 dk gecikebilirim, taşları dizin.', time: '20:58', unread: 2 },
@@ -12,16 +11,17 @@ const CHATS = [
   { id: 'saha', mark: 'H', bg: '#C25E00', title: 'Halı saha · 7v7', last: 'Ali: Gezegen’de yarın 20:00, kaleci lazım', time: 'Pzt', unread: 0 },
 ];
 
-export default function Sohbetler({ navigation }: BottomTabScreenProps<TabParams, 'Sohbetler'>) {
+export default function Sohbetler({ navigation }: ScreenProps<'Sohbetler'>) {
   const insets = useSafeAreaInsets();
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={{ paddingTop: insets.top + 8, paddingHorizontal: 20, paddingBottom: 120, gap: 18 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={{ paddingTop: insets.top + 4, paddingHorizontal: 20, paddingBottom: 60, gap: 18 }}>
+      <View style={{ marginLeft: -8 }}><NavBack label="Keşfet" onPress={() => navigation.goBack()} /></View>
       <T w="x" size={34} style={{ letterSpacing: -0.8 }} accessibilityRole="header">Sohbet</T>
       <Card>
         {CHATS.map((c, idx) => (
           <View key={c.id}>
             {idx > 0 ? <Sep inset={78} /> : null}
-            <Tap onPress={() => navigation.getParent()?.navigate('Sohbet')} style={styles.row}>
+            <Tap onPress={() => navigation.navigate('Sohbet')} style={styles.row}>
               <GameTile mark={c.mark} bg={c.bg} size={50} />
               <View style={{ flex: 1, gap: 2 }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

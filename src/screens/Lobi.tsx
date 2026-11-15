@@ -7,6 +7,7 @@ import { Avatar, Card, NavBack, PrimaryButton, SectionLabel, Sep, T, Tap, tapSuc
 import { ME, TABLE_PLAYERS } from '../data';
 import { CAT_META, VENUES, distanceKm, fmtKm, venueById } from '../venues';
 import { useSession } from '../store';
+import { ME_CAMPUS, bolumOf } from '../campus';
 import { SmokeFact } from './Harita';
 import type { ScreenProps } from '../navigation';
 
@@ -26,9 +27,13 @@ export default function Lobi({ navigation, route }: ScreenProps<'Lobi'>) {
 
   const seated = table.total - table.need;
   const shown = Math.min(seated, 3);
-  const base = TABLE_PLAYERS.slice(0, shown).map((p, i) => (i === 0 ? { ...p, name: table.host, meta: `Kurucu · Güven ${table.hostTrust}` } : p));
+  const base = TABLE_PLAYERS.slice(0, shown).map((p, i) => {
+    const name = i === 0 ? table.host : p.name;
+    const b = bolumOf(name);
+    return { ...p, name, sameDept: b.bolum === ME_CAMPUS.bolum, meta: `${i === 0 ? 'Kurucu · ' : ''}${b.bolum} · ${b.sinif}. sınıf` };
+  });
   const ok = stage === 'approved';
-  const players = ok ? [...base, { id: 'me', i: ME.i, bg: ME.bg, name: 'Sen', meta: 'Az önce katıldın', rating: '4,8', trust: 96 }] : base;
+  const players = ok ? [...base, { id: 'me', i: ME.i, bg: ME.bg, name: 'Sen', meta: `${ME_CAMPUS.bolum} · ${ME_CAMPUS.sinif}. sınıf`, rating: '4,8', trust: 96, sameDept: false }] : base;
   const filled = seated + (ok ? 1 : 0);
   const done = filled >= table.total;
   const womenLocked = !!table.womenOnly && !(verification.status === 'verified' && verification.gender === 'kadin');
@@ -118,8 +123,11 @@ export default function Lobi({ navigation, route }: ScreenProps<'Lobi'>) {
                 <View style={[styles.row, { paddingVertical: 10 }]}>
                   <Avatar i={p.i} bg={p.bg} size={40} />
                   <View style={{ flex: 1 }}>
-                    <T w="s" size={16}>{p.name}</T>
-                    <T size={13} color={C.text2}>{p.meta}</T>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                      <T w="s" size={16}>{p.name}</T>
+                      {p.sameDept ? <View style={styles.dept}><T w="b" size={10} color="#05605F">SENİN BÖLÜMÜN</T></View> : null}
+                    </View>
+                    <T size={13} color={C.text2} numberOfLines={1}>{p.meta}</T>
                   </View>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
                     <Icon name="star" size={13} color={C.orange} fill={C.orange} strokeWidth={1} />
@@ -185,6 +193,7 @@ const styles = StyleSheet.create({
   catTile: { width: 48, height: 48, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
   fact: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: C.bg, borderRadius: 8, paddingHorizontal: 8, paddingVertical: 4 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, paddingVertical: 12 },
+  dept: { backgroundColor: '#DBF5F4', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6 },
   partner: { backgroundColor: C.tint, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6 },
   seat: { width: 36, height: 36, borderRadius: 18, borderWidth: 2, borderStyle: 'dashed', borderColor: C.gray, alignItems: 'center', justifyContent: 'center' },
   footer: { position: 'absolute', left: 0, right: 0, bottom: 0, paddingHorizontal: 20, paddingTop: 12, gap: 8, backgroundColor: 'rgba(242,242,247,0.97)' },

@@ -35,7 +35,7 @@ export default function Profil({ navigation }: BottomTabScreenProps<TabParams, '
         <Avatar i="DA" bg={C.tint2} size={80} />
         <View style={{ gap: 4, flex: 1 }}>
           <T w="x" size={24} style={{ letterSpacing: -0.5 }}>Deniz Aydın</T>
-          <T size={15} color={C.text2}>ERÜ · Talas · 2025'ten beri</T>
+          <T size={15} color={C.text2}>ERÜ · Bilgisayar Müh. · 3. sınıf</T>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
             <Icon name="star" size={15} color={C.orange} fill={C.orange} strokeWidth={1} />
             <T w="s" size={15}>4,8</T>
