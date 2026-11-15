@@ -1,8 +1,8 @@
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 import { C } from '../../core/theme';
 import Icon from '../../components/Icon';
-import { Avatar, Card, PrimaryButton, Sep, T, Tap, Toggle, tapLight, tapSuccess } from '../../components/ui';
+import { Card, Sep, T, Tap, Toggle} from '../../components/ui';
 import { styles } from './styles';
 import { DAYS, MY_LESSONS, freeWindows, todayIndex } from './data';
 import { CAT_META, VENUES } from '../mekan/venues';
@@ -42,7 +42,7 @@ export default function Program({ onTable }: { onTable: (venueId: string, tableI
             <View style={styles.timeCol}><T w="b" size={13}>{hh(b.start)}</T><T size={12} color={C.text2}>{hh(b.end)}</T></View>
             <View style={[styles.lessonCard, { backgroundColor: b.l.color }]}>
               <T w="b" size={16} color="#FFF">{b.l.name}</T>
-              <T w="s" size={13} color="rgba(255,255,255,0.9)">{b.l.code} · {b.l.room}</T>
+              <T w="s" size={13} color="#FFFFFF">{b.l.code} · {b.l.room}</T>
             </View>
           </View>
         ) : (
@@ -55,7 +55,7 @@ export default function Program({ onTable }: { onTable: (venueId: string, tableI
               </View>
               {TABLES.slice(b.start % 3, (b.start % 3) + 2).map(({ v, t }) => (
                 <Tap key={t.id} onPress={() => onTable(v.id, t.id)} style={styles.suggest}>
-                  <View style={[styles.sugIcon, { backgroundColor: CAT_META[v.cat].color }]}><Icon name={CAT_META[v.cat].icon} size={16} color="#FFF" strokeWidth={2} /></View>
+                  <View style={[styles.sugIcon, { backgroundColor: CAT_META[v.cat].color }]}><Icon name={CAT_META[v.cat].icon} size={16} color={CAT_META[v.cat].on} strokeWidth={2} /></View>
                   <View style={{ flex: 1 }}>
                     <T w="s" size={14} numberOfLines={1}>{t.game} · {t.need} kişi</T>
                     <T size={12} color={C.text2} numberOfLines={1}>{v.name}</T>
@@ -89,7 +89,7 @@ export default function Program({ onTable }: { onTable: (venueId: string, tableI
       </Card>
       <Tap style={styles.linkRow}>
         <Icon name="calendar" size={18} color={C.primary} />
-        <T w="s" size={15} color={C.primary} style={{ flex: 1 }}>Programı OBİS'ten içe aktar</T>
+        <T w="s" size={15} color={C.primary} style={{ flex: 1 }}>Programı OBİS’ten içe aktar</T>
         <Icon name="chevRight" size={13} color={C.chevron} strokeWidth={3} />
       </Tap>
     </View>

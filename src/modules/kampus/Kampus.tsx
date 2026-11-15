@@ -28,7 +28,9 @@ export default function Kampus({ navigation, route }: BottomTabScreenProps<TabPa
   ];
   const items = all.filter((x) => modules[x.mod]);
   const [tab, setTab] = React.useState<Tab>(route.params?.tab ?? items[0]?.id ?? 'program');
-  React.useEffect(() => { if (route.params?.tab) setTab(route.params.tab); }, [route.params?.tab]);
+  // Follow a new tab requested via navigation params (adjust state during render, no effect).
+  const [seenParam, setSeenParam] = React.useState(route.params?.tab);
+  if (route.params?.tab !== seenParam) { setSeenParam(route.params?.tab); if (route.params?.tab) setTab(route.params.tab); }
   const current = items.some((x) => x.id === tab) ? tab : items[0]?.id;
 
   return (

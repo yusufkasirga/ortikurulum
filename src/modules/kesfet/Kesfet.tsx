@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { C } from '../../core/theme';
@@ -9,10 +9,10 @@ import ModuleTile from '../../components/ModuleTile';
 import { MODULES } from '../../core/modules';
 import { useSession } from '../../core/store';
 import { useOpenModule } from '../../core/useOpenModule';
-import { useWindowDimensions } from 'react-native';
 import { NEXT_TABLE } from '../oyun/teams';
 import { freeWindows, todayIndex } from '../kampus/data';
 import { CAT_META, FEATURED, OpenTable, Venue, VENUES, VenueCat, distanceKm, fmtKm } from '../mekan/venues';
+import { campusById } from '../kampus/campuses';
 import type { TabParams } from '../../core/navigation';
 
 type Cat = 'all' | 'masa' | 'ps' | 'spor';
@@ -28,7 +28,7 @@ const FREE = freeWindows(todayIndex())[0];
 export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, 'Kesfet'>) {
   const insets = useSafeAreaInsets();
   const [cat, setCat] = React.useState<Cat>('all');
-  const { modules } = useSession();
+  const { modules, campusId } = useSession();
   const openModule = useOpenModule();
   const { width } = useWindowDimensions();
   const tileW = Math.floor((width - 40 - 20) / 3);
@@ -63,7 +63,7 @@ export default function Kesfet({ navigation }: BottomTabScreenProps<TabParams, '
         <T w="x" size={32} style={{ letterSpacing: -1, lineHeight: 36 }} accessibilityRole="header">Bu akşam{'\n'}ne oynuyoruz?</T>
         <Tap style={styles.livePill}>
           <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: C.greenDot }} />
-          <T w="s" size={13} color={C.green}>Talas · ERÜ çevresinde {ALL.length} açık masa</T>
+          <T w="s" size={13} color={C.green}>Talas · {campusById(campusId).short} çevresinde {ALL.length} açık masa</T>
         </Tap>
       </View>
 
@@ -170,18 +170,18 @@ function FeaturedCard({ v, onPress }: { v: Venue; onPress: () => void }) {
   const open = v.tables.reduce((n, t) => n + t.need, 0);
   return (
     <Tap onPress={onPress} style={[styles.feat, { backgroundColor: meta.color }]} accessibilityLabel={`Reklam. ${v.name}. ${v.featured?.offer}`}>
-      <View style={[styles.featDeco, { transform: [{ rotate: '-16deg' }] }]}><Icon name={meta.icon} color="rgba(255,255,255,0.22)" size={130} strokeWidth={1.6} /></View>
+      <View style={[styles.featDeco, { transform: [{ rotate: '-16deg' }] }]}><Icon name={meta.icon} color={meta.on === '#FFFFFF' ? 'rgba(255,255,255,0.22)' : 'rgba(0,0,0,0.12)'} size={130} strokeWidth={1.6} /></View>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <View style={styles.featTag}><T w="b" size={11} color={meta.ink}>{meta.label.toUpperCase()}</T></View>
-        {open ? <View style={styles.featOpen}><View style={{ width: 7, height: 7, borderRadius: 4, backgroundColor: C.lime }} /><T w="b" size={12} color="#FFF">{open} kişi aranıyor</T></View> : null}
+        {open ? <View style={styles.featOpen}><View style={{ width: 7, height: 7, borderRadius: 4, backgroundColor: C.lime }} /><T w="b" size={12} color={meta.on}>{open} kişi aranıyor</T></View> : null}
       </View>
       <View style={{ flex: 1 }} />
-      <T w="x" size={21} color="#FFFFFF" numberOfLines={1} style={{ letterSpacing: -0.4 }}>{v.name}</T>
+      <T w="x" size={21} color={meta.on} numberOfLines={1} style={{ letterSpacing: -0.4 }}>{v.name}</T>
       <View style={styles.offer}><T w="b" size={14} color="#241200" numberOfLines={2}>{v.featured?.offer}</T></View>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-        {v.google ? <T w="s" size={13} color="#FFFFFF">★ {v.google.rating.toFixed(1).replace('.', ',')}</T> : null}
-        <T w="s" size={13} color="rgba(255,255,255,0.9)">{fmtKm(distanceKm(v.lat, v.lng))}</T>
-        <T w="s" size={13} color="rgba(255,255,255,0.9)" numberOfLines={1} style={{ flex: 1 }}>{v.area.split(' · ')[0]}</T>
+        {v.google ? <T w="s" size={13} color={meta.on}>★ {v.google.rating.toFixed(1).replace('.', ',')}</T> : null}
+        <T w="s" size={13} color={meta.on}>{fmtKm(distanceKm(v.lat, v.lng))}</T>
+        <T w="s" size={13} color={meta.on} numberOfLines={1} style={{ flex: 1 }}>{v.area.split(' · ')[0]}</T>
       </View>
     </Tap>
   );
@@ -196,7 +196,7 @@ function LobbyCard({ v, t, onPress }: { v: Venue; t: OpenTable; onPress: () => v
   return (
     <Tap onPress={onPress} style={styles.card} accessibilityLabel={`${t.game}, ${v.name}, ${t.need} kişi aranıyor, ${t.time}`}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-        <View style={[styles.tile, { backgroundColor: meta.color }]}><Icon name={meta.icon} color="#FFF" size={24} strokeWidth={2} /></View>
+        <View style={[styles.tile, { backgroundColor: meta.color }]}><Icon name={meta.icon} color={meta.on} size={24} strokeWidth={2} /></View>
         <View style={{ flex: 1, gap: 2 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             <T w="s" size={17} numberOfLines={1} style={{ flexShrink: 1 }}>{t.game}</T>
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
   heroIcon: { width: 50, height: 50, borderRadius: 16, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' },
   heroGo: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#241200', alignItems: 'center', justifyContent: 'center' },
   live: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: '#14121F', borderRadius: 22, padding: 14 },
-  liveTile: { width: 42, height: 42, borderRadius: 13, backgroundColor: '#14A44D', alignItems: 'center', justifyContent: 'center' },
+  liveTile: { width: 42, height: 42, borderRadius: 13, backgroundColor: '#0C642F', alignItems: 'center', justifyContent: 'center' },
   liveQr: { backgroundColor: C.sun, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 },
   freeCard: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: '#DBF5F4', borderRadius: 18, padding: 14 },
   freeIcon: { width: 44, height: 44, borderRadius: 13, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' },

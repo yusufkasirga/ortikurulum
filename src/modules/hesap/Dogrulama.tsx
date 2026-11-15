@@ -80,7 +80,7 @@ export default function Dogrulama({ navigation, route }: ScreenProps<'Dogrulama'
               <Check on={consent} onPress={() => setConsent((x) => !x)} text="Kimlik doğrulaması için yüz görüntümün kimlik fotoğrafımla karşılaştırılmasına açık rıza veriyorum." />
             </Card>
             <T size={12} color={C.text2} style={{ marginHorizontal: 4, lineHeight: 17 }}>
-              Rıza vermek zorunda değilsin; vermezsen karma ve erkek masalarını kullanmaya devam edersin. Rızanı Ayarlar'dan istediğin zaman geri çekebilirsin.
+              Rıza vermek zorunda değilsin; vermezsen karma ve erkek masalarını kullanmaya devam edersin. Rızanı Ayarlar’dan istediğin zaman geri çekebilirsin.
             </T>
           </ScrollView>
           <View style={[styles.footer, { paddingBottom: insets.bottom + 14 }]}>
@@ -98,7 +98,7 @@ export default function Dogrulama({ navigation, route }: ScreenProps<'Dogrulama'
           </T>
           <View style={[styles.frame, step === 'selfie' && { borderRadius: 160, alignSelf: 'center', width: 260, height: 320 }]}>
             <Icon name={step === 'id' ? 'image' : 'person'} size={56} color="rgba(255,255,255,0.7)" />
-            <T size={13} color="rgba(255,255,255,0.8)">Kamera önizlemesi (prototip)</T>
+            <T size={13} color="#FFFFFF">Kamera önizlemesi (prototip)</T>
           </View>
           <View style={{ flex: 1 }} />
           <PrimaryButton title={step === 'id' ? 'Fotoğrafı çek' : 'Selfie çek'} onPress={() => { tapLight(); setStep(step === 'id' ? 'selfie' : 'checking'); }} />
@@ -118,7 +118,7 @@ export default function Dogrulama({ navigation, route }: ScreenProps<'Dogrulama'
           <View style={[styles.heroIcon, { backgroundColor: C.greenBg }]}><Icon name="check" size={40} color={C.green} strokeWidth={2.6} /></View>
           <T w="x" size={24}>Doğrulandın</T>
           <T size={15} color={C.text2} style={{ textAlign: 'center', lineHeight: 21 }}>
-            Kimlik fotoğrafın ve selfie'n silindi. Profilinde artık “Doğrulanmış” rozeti var{gender === 'kadin' ? ' ve kadın masalarını görebilirsin' : ''}.
+            Kimlik fotoğrafın ve selfie’n silindi. Profilinde artık “Doğrulanmış” rozeti var{gender === 'kadin' ? ' ve kadın masalarını görebilirsin' : ''}.
           </T>
           <View style={{ alignSelf: 'stretch', marginTop: 12 }}><PrimaryButton title="Devam" onPress={finish} /></View>
         </View>

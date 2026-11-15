@@ -5,11 +5,11 @@ export type Team = { id: string; name: string; game: string; usual: string; venu
 
 export const TEAMS: Team[] = [
   {
-    id: 'k1', name: 'Perşembe Okey Ekibi', game: '101 Okey', usual: 'Perşembe akşamları · Arena', venueId: 'arena', played: 12, color: '#14A44D',
+    id: 'k1', name: 'Perşembe Okey Ekibi', game: '101 Okey', usual: 'Perşembe akşamları · Arena', venueId: 'arena', played: 12, color: '#0C642F',
     members: [{ name: 'Mehmet K.', i: 'MK', bg: '#FFD8B5' }, { name: 'Elif A.', i: 'EA', bg: '#CFE3FF' }, { name: 'Sen', i: 'DA', bg: '#E2DBFF' }],
   },
   {
-    id: 'k2', name: 'Gece FC Kadrosu', game: 'EA FC · 2v2', usual: 'Hafta sonu gece · Sade Vip Lounge', venueId: 'sade', played: 5, color: '#6D4AFF',
+    id: 'k2', name: 'Gece FC Kadrosu', game: 'EA FC · 2v2', usual: 'Hafta sonu gece · Sade Vip Lounge', venueId: 'sade', played: 5, color: '#4C21FF',
     members: [{ name: 'Cem Y.', i: 'CY', bg: '#FFF1C2' }, { name: 'Kaan D.', i: 'KD', bg: '#D3F0DA' }, { name: 'Burak T.', i: 'BT', bg: '#FFE3E8' }, { name: 'Sen', i: 'DA', bg: '#E2DBFF' }],
   },
 ];

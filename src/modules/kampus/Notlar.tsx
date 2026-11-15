@@ -48,7 +48,7 @@ export default function Notlar({ onOpen }: { onOpen: (id: string) => void }) {
           <View style={{ flex: 1, gap: 6 }}>
             <View style={styles.starTag}><T w="b" size={11} color="#241200">HAFTANIN NOTU</T></View>
             <T w="x" size={19} color="#FFF" numberOfLines={3} style={{ letterSpacing: -0.3, lineHeight: 23 }}>{star.title}</T>
-            <T w="s" size={13} color="rgba(255,255,255,0.9)">{star.code} · {star.author}</T>
+            <T w="s" size={13} color="#FFFFFF">{star.code} · {star.author}</T>
             <View style={{ flexDirection: 'row', gap: 12, marginTop: 4 }}>
               <T w="b" size={13} color="#FFF">♥ {star.likes}</T>
               <T w="b" size={13} color="#FFF">{star.saves} kayıt</T>
@@ -160,7 +160,7 @@ function NoteCard({ n, width, saved, onOpen, onSave }: { n: Note; width: number;
         <T w="b" size={14} numberOfLines={2} style={{ lineHeight: 18 }}>{n.title}</T>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 2 }}>
           <T size={12} color={C.text2} numberOfLines={1} style={{ flex: 1 }}>{n.author}</T>
-          <T w="b" size={12} color={C.heart}>♥ {n.likes}</T>
+          <T w="b" size={12} color={C.heartText}>♥ {n.likes}</T>
         </View>
       </View>
     </Tap>

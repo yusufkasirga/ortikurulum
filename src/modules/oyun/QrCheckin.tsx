@@ -6,6 +6,7 @@ import Icon from '../../components/Icon';
 import { PrimaryButton, T, Tap, tapSuccess } from '../../components/ui';
 import { venueById } from '../mekan/venues';
 import type { ScreenProps } from '../../core/navigation';
+import { track } from '../../core/analytics';
 
 /**
  * Table QR check-in at partner venues.
@@ -16,7 +17,7 @@ export default function QrCheckin({ navigation, route }: ScreenProps<'QrCheckin'
   const insets = useSafeAreaInsets();
   const venue = venueById(route.params?.venueId ?? 'arena');
   const [done, setDone] = React.useState(false);
-  const line = React.useRef(new Animated.Value(0)).current;
+  const line = React.useState(() => new Animated.Value(0))[0];
   React.useEffect(() => {
     const loop = Animated.loop(Animated.sequence([
       Animated.timing(line, { toValue: 1, duration: 1400, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
@@ -62,7 +63,7 @@ export default function QrCheckin({ navigation, route }: ScreenProps<'QrCheckin'
         </View>
         <T size={14} color="rgba(255,255,255,0.75)" style={{ textAlign: 'center', lineHeight: 20 }}>Kod her masada farklı ve birkaç dakikada bir yenilenir;{'\n'}uzaktan check-in yapılamaz.</T>
       </View>
-      <PrimaryButton title="Okutuldu (demo)" color={C.sun} textColor="#241200" onPress={() => { tapSuccess(); setDone(true); }} />
+      <PrimaryButton title="Okutuldu (demo)" color={C.sun} textColor="#241200" onPress={() => { tapSuccess(); setDone(true); track('checkin_qr', { mekan: venue?.id ?? '' }); }} />
     </View>
   );
 }

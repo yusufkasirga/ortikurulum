@@ -25,14 +25,14 @@ export const HOURS = [9, 10, 11, 12, 13, 14, 15, 16, 17] as const;
 export type Lesson = { day: number; start: number; end: number; code: string; name: string; room: string; color: string };
 
 export const MY_LESSONS: Lesson[] = [
-  { day: 0, start: 9, end: 11, code: 'BM301', name: 'Veri Yapıları', room: 'MÜH-B204', color: '#6D4AFF' },
-  { day: 0, start: 16, end: 18, code: 'BM305', name: 'İşletim Sistemleri', room: 'MÜH-A101', color: '#0EA5A4' },
-  { day: 1, start: 10, end: 12, code: 'BM303', name: 'Veritabanı Sistemleri', room: 'MÜH-B110', color: '#F2711C' },
-  { day: 1, start: 14, end: 16, code: 'MAT221', name: 'Olasılık ve İstatistik', room: 'FEN-A12', color: '#E8398A' },
-  { day: 2, start: 9, end: 12, code: 'BM307', name: 'Bilgisayar Ağları', room: 'MÜH-LAB3', color: '#14A44D' },
-  { day: 3, start: 13, end: 15, code: 'BM301', name: 'Veri Yapıları (Lab)', room: 'MÜH-LAB1', color: '#6D4AFF' },
-  { day: 3, start: 15, end: 17, code: 'BM305', name: 'İşletim Sistemleri', room: 'MÜH-A101', color: '#0EA5A4' },
-  { day: 4, start: 10, end: 12, code: 'TDE101', name: 'Türk Dili', room: 'ONLINE', color: '#A35200' },
+  { day: 0, start: 9, end: 11, code: 'BM301', name: 'Veri Yapıları', room: 'MÜH-B204', color: '#4C21FF' },
+  { day: 0, start: 16, end: 18, code: 'BM305', name: 'İşletim Sistemleri', room: 'MÜH-A101', color: '#086363' },
+  { day: 1, start: 10, end: 12, code: 'BM303', name: 'Veritabanı Sistemleri', room: 'MÜH-B110', color: '#B21100' },
+  { day: 1, start: 14, end: 16, code: 'MAT221', name: 'Olasılık ve İstatistik', room: 'FEN-A12', color: '#AA1459' },
+  { day: 2, start: 9, end: 12, code: 'BM307', name: 'Bilgisayar Ağları', room: 'MÜH-LAB3', color: '#0C642F' },
+  { day: 3, start: 13, end: 15, code: 'BM301', name: 'Veri Yapıları (Lab)', room: 'MÜH-LAB1', color: '#4C21FF' },
+  { day: 3, start: 15, end: 17, code: 'BM305', name: 'İşletim Sistemleri', room: 'MÜH-A101', color: '#086363' },
+  { day: 4, start: 10, end: 12, code: 'TDE101', name: 'Türk Dili', room: 'ONLINE', color: '#7A4100' },
 ];
 
 /** Free windows (≥2h) between 09:00–18:00 for a weekday. */
@@ -83,12 +83,12 @@ export type CampusEvent = {
 
 /** Demo events (not real announcements) until clubs publish via the club panel. */
 export const EVENTS: CampusEvent[] = [
-  { id: 'e1', title: 'Kampüs Okey Turnuvası', club: 'Orti × Arena', kind: 'Turnuva', place: 'Arena Premium Okey', when: 'Cuma 19:00', going: 48, lookingBuddy: 7, free: true, color: '#14A44D' },
-  { id: 'e2', title: 'Bahar Şenliği açılış konseri', club: 'Öğrenci Konseyi', kind: 'Konser', place: 'Kampüs açık hava sahnesi', when: 'Cumartesi 20:30', going: 612, lookingBuddy: 34, free: true, color: '#E8398A' },
-  { id: 'e3', title: '24 saat hackathon', club: 'Bilgisayar Topluluğu', kind: 'Atölye', place: 'Mühendislik Fakültesi', when: '28–29 Kasım', going: 96, lookingBuddy: 12, free: true, color: '#6D4AFF' },
-  { id: 'e4', title: 'Fakülteler arası halı saha ligi', club: 'Spor Kulübü', kind: 'Spor', place: 'ERÜ 15 Temmuz Kampüs Sahası', when: 'Her pazar 14:00', going: 140, lookingBuddy: 9, free: true, color: '#0EA5A4' },
-  { id: 'e5', title: 'Mühendislik kariyer günü', club: 'Kariyer Merkezi', kind: 'Kariyer', place: 'Kongre ve Kültür Merkezi', when: '3 Aralık 10:00', going: 230, lookingBuddy: 5, free: true, color: '#F2711C' },
-  { id: 'e6', title: 'Kutu oyunu gecesi', club: 'Oyun Kulübü', kind: 'Sosyal', place: 'Latibule Coffee', when: 'Perşembe 20:00', going: 31, lookingBuddy: 6, free: false, color: '#A35200' },
+  { id: 'e1', title: 'Kampüs Okey Turnuvası', club: 'Orti × Arena', kind: 'Turnuva', place: 'Arena Premium Okey', when: 'Cuma 19:00', going: 48, lookingBuddy: 7, free: true, color: '#0C642F' },
+  { id: 'e2', title: 'Bahar Şenliği açılış konseri', club: 'Öğrenci Konseyi', kind: 'Konser', place: 'Kampüs açık hava sahnesi', when: 'Cumartesi 20:30', going: 612, lookingBuddy: 34, free: true, color: '#AA1459' },
+  { id: 'e3', title: '24 saat hackathon', club: 'Bilgisayar Topluluğu', kind: 'Atölye', place: 'Mühendislik Fakültesi', when: '28–29 Kasım', going: 96, lookingBuddy: 12, free: true, color: '#4C21FF' },
+  { id: 'e4', title: 'Fakülteler arası halı saha ligi', club: 'Spor Kulübü', kind: 'Spor', place: 'ERÜ 15 Temmuz Kampüs Sahası', when: 'Her pazar 14:00', going: 140, lookingBuddy: 9, free: true, color: '#086363' },
+  { id: 'e5', title: 'Mühendislik kariyer günü', club: 'Kariyer Merkezi', kind: 'Kariyer', place: 'Kongre ve Kültür Merkezi', when: '3 Aralık 10:00', going: 230, lookingBuddy: 5, free: true, color: '#B21100' },
+  { id: 'e6', title: 'Kutu oyunu gecesi', club: 'Oyun Kulübü', kind: 'Sosyal', place: 'Latibule Coffee', when: 'Perşembe 20:00', going: 31, lookingBuddy: 6, free: false, color: '#7A4100' },
 ];
 
 export const STUDY_PLACES = ['Merkez Kütüphane', 'Mühendislik Kütüphanesi', 'Sessiz kafe'] as const;

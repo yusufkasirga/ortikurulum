@@ -5,6 +5,7 @@ import { C } from '../../core/theme';
 import Icon from '../../components/Icon';
 import { Avatar, Chip, PrimaryButton, Stars, T, Tap, tapLight, tapSuccess } from '../../components/ui';
 import type { ScreenProps } from '../../core/navigation';
+import { track } from '../../core/analytics';
 
 const PEOPLE = [
   { id: 'mk', i: 'MK', bg: '#FFD8B5', name: 'Mehmet K.', hint: 'Masanın kurucusu', noShow: false },
@@ -100,7 +101,7 @@ export default function Degerlendir({ navigation }: ScreenProps<'Degerlendir'>) 
         <PrimaryButton
           title={done === PEOPLE.length ? 'Puanları gönder' : `Puanları gönder (${done}/${PEOPLE.length})`}
           disabled={done === 0}
-          onPress={() => { tapSuccess(); setSent(true); }}
+          onPress={() => { tapSuccess(); setSent(true); track('puan_gonderildi', { kisi: done }); }}
         />
       </View>
     </View>

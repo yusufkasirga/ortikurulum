@@ -2,9 +2,10 @@ import React from 'react';
 import { ScrollView, View } from 'react-native';
 import { C } from '../../core/theme';
 import Icon from '../../components/Icon';
-import { Avatar, Card, PrimaryButton, Sep, T, Tap, Toggle, tapLight, tapSuccess } from '../../components/ui';
+import { Avatar, Card, PrimaryButton, Sep, T, Tap, tapLight, tapSuccess } from '../../components/ui';
 import { styles } from './styles';
 import { LIB_NOW, MY_LESSONS, STUDY_PLACES, STUDY_TABLES } from './data';
+import { track } from '../../core/analytics';
 
 type StudyStyle = 'sessiz' | 'soru';
 
@@ -84,21 +85,21 @@ export default function Kutuphane({ onCreate }: { onCreate: () => void }) {
               <Avatar i={match.i} bg={match.bg} size={48} />
               <View style={{ flex: 1 }}>
                 <T w="b" size={16}>{match.name} şu an çalışıyor</T>
-                <T size={13} color={C.text2}>{match.course} · {match.until}'e kadar</T>
+                <T size={13} color={C.text2}>{match.course} · {match.until}’e kadar</T>
                 <T size={13} color={C.text2}>{match.place}</T>
               </View>
             </View>
             {stage === 'match' ? (
               <View style={{ flexDirection: 'row', gap: 8 }}>
                 <Tap onPress={() => setStage('form')} style={[styles.evBtn, { backgroundColor: C.bg }]}><T w="s" size={14}>Başkası</T></Tap>
-                <Tap haptic="medium" onPress={() => { tapSuccess(); setStage('coming'); }} style={[styles.evBtn, { flex: 2, backgroundColor: '#0A7FB0' }]}>
+                <Tap haptic="medium" onPress={() => { tapSuccess(); setStage('coming'); track('kutuphane_eslesme', { ders: course }); }} style={[styles.evBtn, { flex: 2, backgroundColor: '#075E82' }]}>
                   <T w="b" size={14} color="#FFF">Yanına geliyorum</T>
                 </Tap>
               </View>
             ) : (
               <View style={[styles.comingBox]} accessibilityLiveRegion="polite">
                 <Icon name="checkCircle" size={20} color={C.green} />
-                <T w="s" size={14} color={C.green} style={{ flex: 1 }}>{match.name.split(' ')[0]}'e haber verildi. Yanına yer tutacak; 50 dk çalışma, 10 dk mola.</T>
+                <T w="s" size={14} color={C.green} style={{ flex: 1 }}>{match.name.split(' ')[0]}’e haber verildi. Yanına yer tutacak; 50 dk çalışma, 10 dk mola.</T>
               </View>
             )}
           </View>
@@ -114,7 +115,7 @@ export default function Kutuphane({ onCreate }: { onCreate: () => void }) {
               <Avatar i={l.i} bg={l.bg} size={40} />
               <View style={{ flex: 1 }}>
                 <T w="s" size={15}>{l.name} · {l.course}</T>
-                <T size={12} color={C.text2} numberOfLines={1}>{l.place} · {l.until}'e kadar · {l.style}</T>
+                <T size={12} color={C.text2} numberOfLines={1}>{l.place} · {l.until}’e kadar · {l.style}</T>
               </View>
               <Tap haptic="light" onPress={() => setComing((x) => ({ ...x, [l.id]: !x[l.id] }))} style={[styles.saveBtn, coming[l.id] && { backgroundColor: C.green }]}>
                 <T w="s" size={13} color={coming[l.id] ? '#FFF' : C.primary}>{coming[l.id] ? 'Geliyorsun' : 'Yanına otur'}</T>
@@ -130,7 +131,7 @@ export default function Kutuphane({ onCreate }: { onCreate: () => void }) {
         return (
           <View key={s.id} style={styles.note}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-              <View style={[styles.sugIcon, { width: 40, height: 40, borderRadius: 12, backgroundColor: '#6D4AFF' }]}><Icon name="book" size={20} color="#FFF" /></View>
+              <View style={[styles.sugIcon, { width: 40, height: 40, borderRadius: 12, backgroundColor: '#4C21FF' }]}><Icon name="book" size={20} color="#FFF" /></View>
               <View style={{ flex: 1 }}>
                 <T w="b" size={16}>{s.course}</T>
                 <T size={13} color={C.text2}>{s.place} · {s.time}</T>

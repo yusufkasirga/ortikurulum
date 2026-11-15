@@ -30,6 +30,13 @@ import Firsatlar from '../modules/mekan/Firsatlar';
 import Ekipler from '../modules/oyun/Ekipler';
 import Lig from '../modules/oyun/Lig';
 import QrCheckin from '../modules/oyun/QrCheckin';
+import Kayit from '../modules/hesap/Kayit';
+import Ayarlar from '../modules/hesap/Ayarlar';
+import Yasal from '../modules/hesap/Yasal';
+import Moderasyon from '../modules/yonetim/Moderasyon';
+import IsletmePaneli from '../modules/yonetim/IsletmePaneli';
+import KulupPaneli from '../modules/yonetim/KulupPaneli';
+import { useSession } from './store';
 
 export type TabParams = {
   Kesfet: undefined;
@@ -57,6 +64,12 @@ export type RootParams = {
   Ekipler: undefined;
   Lig: undefined;
   QrCheckin: { venueId?: string } | undefined;
+  Kayit: { method?: 'apple' | 'telefon' } | undefined;
+  Ayarlar: undefined;
+  Yasal: { doc: 'kvkk' | 'kosullar' | 'topluluk' };
+  Moderasyon: undefined;
+  IsletmePaneli: undefined;
+  KulupPaneli: undefined;
 };
 export type ScreenProps<K extends keyof RootParams> = NativeStackScreenProps<RootParams, K>;
 
@@ -147,9 +160,10 @@ function Tabs() {
 const theme = { ...DefaultTheme, colors: { ...DefaultTheme.colors, background: C.bg, primary: C.primary } };
 
 export default function RootNavigation() {
+  const { onboarded } = useSession();
   return (
     <NavigationContainer theme={theme}>
-      <Stack.Navigator screenOptions={{ headerShown: false, contentStyle: { backgroundColor: C.bg } }}>
+      <Stack.Navigator initialRouteName={onboarded ? 'Tabs' : 'Hosgeldin'} screenOptions={{ headerShown: false, contentStyle: { backgroundColor: C.bg } }}>
         <Stack.Screen name="Hosgeldin" component={Hosgeldin} />
         <Stack.Screen name="Tabs" component={Tabs} options={{ animation: 'fade' }} />
         <Stack.Screen name="HizliEsles" component={HizliEsles} />
@@ -166,6 +180,12 @@ export default function RootNavigation() {
         <Stack.Screen name="Firsatlar" component={Firsatlar} />
         <Stack.Screen name="NotDetay" component={NotDetay} />
         <Stack.Screen name="Ekipler" component={Ekipler} />
+        <Stack.Screen name="Kayit" component={Kayit} options={{ contentStyle: { backgroundColor: '#FFFFFF' } }} />
+        <Stack.Screen name="Ayarlar" component={Ayarlar} />
+        <Stack.Screen name="Yasal" component={Yasal} />
+        <Stack.Screen name="Moderasyon" component={Moderasyon} />
+        <Stack.Screen name="IsletmePaneli" component={IsletmePaneli} />
+        <Stack.Screen name="KulupPaneli" component={KulupPaneli} />
         <Stack.Screen name="Lig" component={Lig} />
         <Stack.Screen name="QrCheckin" component={QrCheckin} options={{ presentation: 'fullScreenModal', animation: 'slide_from_bottom' }} />
       </Stack.Navigator>

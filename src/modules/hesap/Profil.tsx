@@ -8,6 +8,7 @@ import { Avatar, Card, GameTile, Segmented, Sep, T, Tap } from '../../components
 import { RECENT_GAMES } from '../oyun/data';
 import { useSession } from '../../core/store';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { campusById } from '../kampus/campuses';
 import type { TabParams } from '../../core/navigation';
 
 const PRAISE = [
@@ -21,21 +22,23 @@ const CIRC = 2 * Math.PI * 34;
 
 export default function Profil({ navigation }: BottomTabScreenProps<TabParams, 'Profil'>) {
   const insets = useSafeAreaInsets();
-  const { verification } = useSession();
+  const { verification, campusId } = useSession();
   const root = navigation.getParent();
   const [tab, setTab] = React.useState<'praise' | 'games'>('praise');
   return (
     <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={{ paddingTop: insets.top + 8, paddingHorizontal: 20, paddingBottom: 120, gap: 18 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
         <T w="x" size={34} style={{ letterSpacing: -0.8 }} accessibilityRole="header">Profil</T>
-        <Tap style={{ minHeight: 44, justifyContent: 'center' }}><T size={17} color={C.primary}>Düzenle</T></Tap>
+        <Tap onPress={() => root?.navigate('Ayarlar')} accessibilityLabel="Ayarlar" style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }}>
+          <Icon name="menu" size={20} color={C.primary} />
+        </Tap>
       </View>
 
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
         <Avatar i="DA" bg={C.tint2} size={80} />
         <View style={{ gap: 4, flex: 1 }}>
           <T w="x" size={24} style={{ letterSpacing: -0.5 }}>Deniz Aydın</T>
-          <T size={15} color={C.text2}>ERÜ · Bilgisayar Müh. · 3. sınıf</T>
+          <T size={15} color={C.text2}>{campusById(campusId).short} · Bilgisayar Müh. · 3. sınıf</T>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
             <Icon name="star" size={15} color={C.orange} fill={C.orange} strokeWidth={1} />
             <T w="s" size={15}>4,8</T>
@@ -97,6 +100,12 @@ export default function Profil({ navigation }: BottomTabScreenProps<TabParams, '
         <Tap onPress={() => root?.navigate('Masalarim')} style={styles.row}>
           <Icon name="table" size={20} color={C.primary} />
           <T size={16} style={{ flex: 1 }}>Masalarım</T>
+          <Icon name="chevRight" color={C.chevron} size={14} strokeWidth={3} />
+        </Tap>
+        <Sep inset={48} />
+        <Tap onPress={() => root?.navigate('Ayarlar')} style={styles.row}>
+          <Icon name="lock" size={20} color={C.primary} />
+          <T size={16} style={{ flex: 1 }}>Ayarlar ve gizlilik</T>
           <Icon name="chevRight" color={C.chevron} size={14} strokeWidth={3} />
         </Tap>
         <Sep inset={48} />

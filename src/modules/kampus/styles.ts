@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
   libDeco: { position: 'absolute', right: -40, top: -50, width: 160, height: 160, borderRadius: 80, backgroundColor: 'rgba(255,255,255,0.35)' },
   libIcon: { width: 46, height: 46, borderRadius: 14, backgroundColor: '#FFF', alignItems: 'center', justifyContent: 'center' },
   libChip: { paddingHorizontal: 12, height: 34, borderRadius: 999, backgroundColor: 'rgba(255,255,255,0.75)', justifyContent: 'center' },
-  libChipOn: { backgroundColor: '#0A7FB0' },
+  libChipOn: { backgroundColor: '#075E82' },
   styleCard: { flex: 1, borderRadius: 14, padding: 10, backgroundColor: 'rgba(255,255,255,0.75)', gap: 2 },
   libGo: { height: 50, borderRadius: 14, backgroundColor: '#062F40', alignItems: 'center', justifyContent: 'center', marginTop: 4 },
   matchCard: { backgroundColor: '#FFF', borderRadius: 18, padding: 14, gap: 12 },

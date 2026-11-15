@@ -117,7 +117,7 @@ export function Segmented<K extends string>({ items, value, onChange }: { items:
 
 /** iOS-style switch that looks identical on Android. */
 export function Toggle({ value, onChange, label }: { value: boolean; onChange: (v: boolean) => void; label: string }) {
-  const x = React.useRef(new Animated.Value(value ? 1 : 0)).current;
+  const x = React.useState(() => new Animated.Value(value ? 1 : 0))[0];
   React.useEffect(() => {
     Animated.spring(x, { toValue: value ? 1 : 0, useNativeDriver: false, bounciness: 6, speed: 18 }).start();
   }, [value, x]);

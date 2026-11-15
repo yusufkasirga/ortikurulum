@@ -9,25 +9,35 @@ import { Inter_600SemiBold } from '@expo-google-fonts/inter/600SemiBold';
 import { Inter_700Bold } from '@expo-google-fonts/inter/700Bold';
 import { Inter_800ExtraBold } from '@expo-google-fonts/inter/800ExtraBold';
 import RootNavigation from './src/core/navigation';
-import { SessionProvider } from './src/core/store';
+import { SessionProvider, useSession } from './src/core/store';
+import ErrorBoundary from './src/components/ErrorBoundary';
+import { setupAndroidChannel } from './src/core/notifications';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
+
+function Root() {
+  const { hydrated } = useSession();
+  React.useEffect(() => { setupAndroidChannel(); }, []);
+  React.useEffect(() => { if (hydrated) SplashScreen.hideAsync().catch(() => {}); }, [hydrated]);
+  return hydrated ? <RootNavigation /> : null;
+}
 
 export default function App() {
   const [loaded, error] = useFonts({ Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold, Inter_800ExtraBold });
 
   React.useEffect(() => {
-    if (loaded || error) SplashScreen.hideAsync().catch(() => {});
   }, [loaded, error]);
 
   if (!loaded && !error) return null;
 
   return (
     <SafeAreaProvider>
-      <SessionProvider>
-        <StatusBar style="dark" />
-        <RootNavigation />
-      </SessionProvider>
+      <ErrorBoundary>
+        <SessionProvider>
+          <StatusBar style="dark" />
+          <Root />
+        </SessionProvider>
+      </ErrorBoundary>
     </SafeAreaProvider>
   );
 }

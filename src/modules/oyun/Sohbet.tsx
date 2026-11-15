@@ -47,7 +47,7 @@ export default function Sohbet({ navigation }: ScreenProps<'Sohbet'>) {
         <Tap accessibilityLabel="Geri" onPress={() => navigation.goBack()} style={styles.iconBtn}>
           <Icon name="back" color={C.primary} size={24} strokeWidth={2.6} />
         </Tap>
-        <GameTile mark="O" bg="#1F8A4C" size={38} />
+        <GameTile mark="O" bg="#0C642F" size={38} />
         <View style={{ flex: 1 }}>
           <T w="s" size={16}>101 Okey · Arena</T>
           <T size={13} color={C.text2}>4 kişi · Bugün 21:30</T>

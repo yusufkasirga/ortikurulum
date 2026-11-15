@@ -31,7 +31,7 @@ export default function Mekan({ navigation, route }: ScreenProps<'Mekan'>) {
       <View style={styles.nav}><NavBack label="Harita" onPress={() => navigation.goBack()} /></View>
       <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: insets.bottom + 120, gap: 18 }}>
         <View style={{ flexDirection: 'row', gap: 14, alignItems: 'center' }}>
-          <View style={[styles.tile, { backgroundColor: meta.color }]}><Icon name={meta.icon} color="#FFF" size={34} strokeWidth={1.8} /></View>
+          <View style={[styles.tile, { backgroundColor: meta.color }]}><Icon name={meta.icon} color={meta.on} size={34} strokeWidth={1.8} /></View>
           <View style={{ flex: 1, gap: 4 }}>
             <T w="x" size={24} style={{ letterSpacing: -0.5 }} accessibilityRole="header">{v.name}</T>
             <T size={14} color={C.text2}>{meta.label} · {v.area}</T>
@@ -42,7 +42,7 @@ export default function Mekan({ navigation, route }: ScreenProps<'Mekan'>) {
         {v.featured ? (
           <View style={styles.offer}>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-              <T w="b" size={12} color={C.sunText}>ORTİ'YE ÖZEL</T>
+              <T w="b" size={12} color={C.sunText}>ORTİ’YE ÖZEL</T>
               <T w="s" size={11} color={C.sunText}>Reklam</T>
             </View>
             <T w="x" size={19} color="#241200" style={{ letterSpacing: -0.3 }}>{v.featured.offer}</T>

@@ -23,7 +23,7 @@ export default function VenueMap({ venues, selectedId, onSelect }: VenueMapProps
         return (
           <Tap key={v.id} onPress={() => onSelect(v.id)} style={{ position: 'absolute', left: x - size / 2, top: y - size / 2 }}>
             <View style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: meta.color, borderWidth: sel || v.featured ? 3 : 2, borderColor: v.featured ? '#FFC83D' : '#FFF', alignItems: 'center', justifyContent: 'center' }}>
-              <Icon name={meta.icon} color="#FFFFFF" size={sel ? 24 : 19} strokeWidth={2} />
+              <Icon name={meta.icon} color={meta.on} size={sel ? 24 : 19} strokeWidth={2} />
             </View>
             {open ? <View style={{ position: 'absolute', top: -6, right: -6, minWidth: 20, height: 20, borderRadius: 10, backgroundColor: C.green, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: '#FFF' }}><T w="b" size={11} color="#FFF">{open}</T></View> : null}
           </Tap>

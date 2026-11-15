@@ -29,7 +29,8 @@ export default function Harita({ navigation, route }: BottomTabScreenProps<TabPa
   const [onlyOpen, setOnlyOpen] = React.useState(false);
   const [noSmoke, setNoSmoke] = React.useState(false);
   const [selected, setSelected] = React.useState<string | undefined>();
-  React.useEffect(() => { if (route.params?.filter) { setFilter(route.params.filter); setSelected(undefined); } }, [route.params?.filter]);
+  const [seenFilter, setSeenFilter] = React.useState(route.params?.filter);
+  if (route.params?.filter !== seenFilter) { setSeenFilter(route.params?.filter); if (route.params?.filter) { setFilter(route.params.filter); setSelected(undefined); } }
 
   const venues = VENUES.filter((v) =>
     (filter === 'all' || v.cat === filter || (filter === 'bilardo' && v.games.some((x) => x.value === 'Bilardo'))) &&
@@ -84,7 +85,7 @@ export default function Harita({ navigation, route }: BottomTabScreenProps<TabPa
               ) : looking.map(({ v, t }) => (
                 <Tap key={t.id} onPress={() => { tapLight(); setSelected(v.id); }} style={styles.lookCard}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                    <View style={[styles.miniPin, { backgroundColor: CAT_META[v.cat].color }]}><Icon name={CAT_META[v.cat].icon} color="#FFF" size={16} strokeWidth={2} /></View>
+                    <View style={[styles.miniPin, { backgroundColor: CAT_META[v.cat].color }]}><Icon name={CAT_META[v.cat].icon} color={CAT_META[v.cat].on} size={16} strokeWidth={2} /></View>
                     <View style={{ flex: 1 }}>
                       <T w="s" size={15} numberOfLines={1}>{t.game}</T>
                       <T size={12} color={C.text2} numberOfLines={1}>{v.name}</T>
@@ -130,7 +131,7 @@ function VenueCard({ v, onClose, onOpen, onJoin, onCreate }: {
   return (
     <View style={styles.card}>
       <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 12 }}>
-        <View style={[styles.catTile, { backgroundColor: meta.color }]}><Icon name={meta.icon} color="#FFF" size={24} strokeWidth={2} /></View>
+        <View style={[styles.catTile, { backgroundColor: meta.color }]}><Icon name={meta.icon} color={meta.on} size={24} strokeWidth={2} /></View>
         <Tap onPress={onOpen} style={{ flex: 1 }} accessibilityLabel={`${v.name} detayları`}>
           <T w="b" size={18} numberOfLines={1}>{v.name}</T>
           <T size={13} color={C.text2}>{meta.label} · {fmtKm(distanceKm(v.lat, v.lng))} · {v.hours}</T>

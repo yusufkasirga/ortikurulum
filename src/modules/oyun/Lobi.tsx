@@ -10,12 +10,14 @@ import { useSession } from '../../core/store';
 import { ME_CAMPUS, bolumOf } from '../kampus/data';
 import { SmokeFact } from '../mekan/Harita';
 import type { ScreenProps } from '../../core/navigation';
+import { track } from '../../core/analytics';
+import { notify } from '../../core/notifications';
 
 type Stage = 'idle' | 'requested' | 'approved';
 
 export default function Lobi({ navigation, route }: ScreenProps<'Lobi'>) {
   const insets = useSafeAreaInsets();
-  const { verification } = useSession();
+  const { verification, notif } = useSession();
   const venue = venueById(route.params?.venueId) ?? VENUES[0];
   const table = venue.tables.find((t) => t.id === route.params?.tableId) ?? venue.tables[0] ?? {
     id: 'new', game: 'Yeni masa', need: 1, total: 4, time: 'Bugün 21:30', host: 'Sen', hostTrust: 96,
@@ -40,7 +42,11 @@ export default function Lobi({ navigation, route }: ScreenProps<'Lobi'>) {
 
   const request = () => {
     setStage('requested');
-    timer.current = setTimeout(() => { tapSuccess(); setStage('approved'); }, 2000);
+    track('masa_istek', { mekan: venue.id });
+    timer.current = setTimeout(() => {
+      tapSuccess(); setStage('approved'); track('masa_onay', { mekan: venue.id });
+      notify('masa', notif, 'Masaya onaylandın', `${table.game} · ${venue.name} · ${table.time}`);
+    }, 2000);
   };
   const cancel = () => { if (timer.current) clearTimeout(timer.current); setStage('idle'); };
   const directions = () => {
@@ -76,7 +82,7 @@ export default function Lobi({ navigation, route }: ScreenProps<'Lobi'>) {
         </View>
 
         <Tap onPress={() => navigation.navigate('Mekan', { id: venue.id })} style={styles.venueCard} accessibilityLabel={`${venue.name} mekan detayı`}>
-          <View style={[styles.catTile, { backgroundColor: meta.color }]}><Icon name={meta.icon} color="#FFF" size={22} strokeWidth={2} /></View>
+          <View style={[styles.catTile, { backgroundColor: meta.color }]}><Icon name={meta.icon} color={meta.on} size={22} strokeWidth={2} /></View>
           <View style={{ flex: 1, gap: 2 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
               <T w="s" size={16} numberOfLines={1} style={{ flexShrink: 1 }}>{venue.name}</T>

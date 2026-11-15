@@ -7,6 +7,7 @@ import { Avatar, NavBack, PrimaryButton, T, Tap, tapLight, tapSuccess } from '..
 import { NOTES } from './data';
 import { KIND_COLOR, PaperThumb, courseColor } from './noteUi';
 import type { ScreenProps } from '../../core/navigation';
+import { track } from '../../core/analytics';
 
 export default function NotDetay({ navigation, route }: ScreenProps<'NotDetay'>) {
   const insets = useSafeAreaInsets();
@@ -99,7 +100,7 @@ export default function NotDetay({ navigation, route }: ScreenProps<'NotDetay'>)
         </View>
       </ScrollView>
       <View style={[styles.footer, { paddingBottom: insets.bottom + 12 }]}>
-        <PrimaryButton title={saved ? 'Kaydedildi · çevrimdışı açılır' : 'Kaydet ve indir'} color={saved ? C.green : C.primary} onPress={() => { tapSuccess(); setSaved(true); }} />
+        <PrimaryButton title={saved ? 'Kaydedildi · çevrimdışı açılır' : 'Kaydet ve indir'} color={saved ? C.green : C.primary} onPress={() => { tapSuccess(); setSaved(true); track('not_kaydet', { not: n.id }); }} />
       </View>
     </View>
   );

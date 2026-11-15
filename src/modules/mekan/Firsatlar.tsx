@@ -22,9 +22,9 @@ export default function Firsatlar({ navigation }: ScreenProps<'Firsatlar'>) {
         return (
           <Tap key={v.id} onPress={() => navigation.navigate('Mekan', { id: v.id })} style={styles.card}>
             <View style={[styles.head, { backgroundColor: meta.color }]}>
-              <View style={styles.deco}><Icon name={meta.icon} size={110} color="rgba(255,255,255,0.18)" strokeWidth={1.6} /></View>
+              <View style={styles.deco}><Icon name={meta.icon} size={110} color={meta.on === '#FFFFFF' ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.1)'} strokeWidth={1.6} /></View>
               <View style={styles.tag}><T w="b" size={11} color={meta.ink}>{meta.label.toUpperCase()}</T></View>
-              <T w="x" size={22} color="#FFF" style={{ letterSpacing: -0.4 }}>{v.featured?.offer}</T>
+              <T w="x" size={22} color={meta.on} style={{ letterSpacing: -0.4 }}>{v.featured?.offer}</T>
             </View>
             <View style={{ padding: 14, gap: 6 }}>
               <T w="b" size={16}>{v.name}</T>

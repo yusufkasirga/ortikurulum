@@ -7,6 +7,7 @@ import { Card, GameTile, SectionLabel, Segmented, Sep, T, Tap, Toggle, tapLight,
 import { CAT_META, VENUES, Venue, VenueCat, venueById } from '../mekan/venues';
 import { useSession } from '../../core/store';
 import type { ScreenProps } from '../../core/navigation';
+import { track } from '../../core/analytics';
 
 type Mode = 'masa' | 'online';
 type Join = 'approve' | 'instant';
@@ -14,20 +15,20 @@ type Audience = 'karma' | 'kadin' | 'erkek';
 type Game = { id: string; label: string; mark: string; bg: string; size: number; cats: VenueCat[] };
 
 const TABLE_GAMES: Game[] = [
-  { id: 'okey', label: 'Okey', mark: 'O', bg: '#1F8A4C', size: 4, cats: ['okey'] },
+  { id: 'okey', label: 'Okey', mark: 'O', bg: '#0C642F', size: 4, cats: ['okey'] },
   { id: 'tavla', label: 'Tavla', mark: 'T', bg: '#8A5A2B', size: 2, cats: ['okey', 'kafe'] },
   { id: 'bilardo', label: 'Bilardo', mark: 'B', bg: '#1C1C1E', size: 2, cats: ['bilardo'] },
   { id: 'ps', label: 'PlayStation', mark: 'P', bg: '#3A2FB8', size: 2, cats: ['playstation', 'okey'] },
-  { id: 'kutu', label: 'Kutu oyunu', mark: 'K', bg: '#A35200', size: 4, cats: ['kafe'] },
+  { id: 'kutu', label: 'Kutu oyunu', mark: 'K', bg: '#7A4100', size: 4, cats: ['kafe'] },
   { id: 'saha', label: 'Halı saha', mark: 'H', bg: '#0B7A6E', size: 14, cats: ['halisaha'] },
 ];
 const ONLINE_GAMES: Game[] = [
   { id: 'val', label: 'Valorant', mark: 'V', bg: '#C8243C', size: 5, cats: [] },
-  { id: 'cs', label: 'CS2', mark: 'C', bg: '#B45A00', size: 5, cats: [] },
+  { id: 'cs', label: 'CS2', mark: 'C', bg: '#8E4100', size: 5, cats: [] },
   { id: 'lol', label: 'LoL', mark: 'L', bg: '#0B5C8C', size: 5, cats: [] },
   { id: 'fc', label: 'EA FC', mark: 'F', bg: '#146C34', size: 2, cats: [] },
   { id: 'pubg', label: 'PUBG', mark: 'P', bg: '#8A6A00', size: 4, cats: [] },
-  { id: 'diger', label: 'Diğer', mark: '+', bg: '#6E6E73', size: 4, cats: [] },
+  { id: 'diger', label: 'Diğer', mark: '+', bg: '#4F4F54', size: 4, cats: [] },
 ];
 
 const venuesFor = (g: Game): Venue[] => VENUES.filter((v) => g.cats.includes(v.cat) || (g.id === 'bilardo' && v.games.some((x) => x.value === 'Bilardo')) || (g.id === 'ps' && v.games.some((x) => x.value.startsWith('PlayStation'))));
@@ -64,6 +65,7 @@ export default function Olustur({ navigation, route }: ScreenProps<'Olustur'>) {
   const publish = () => {
     if (!canPublish) return;
     tapSuccess();
+    track('masa_acildi', { oyun: game.id, kitle: audience ?? 'karma', mod: mode });
     navigation.goBack();
     navigation.navigate('Lobi', { venueId: venue?.id ?? 'arena', tableId: 't1' });
   };
@@ -103,7 +105,7 @@ export default function Olustur({ navigation, route }: ScreenProps<'Olustur'>) {
                 return (
                   <Tap key={v.id} onPress={() => { tapLight(); setVenueId(v.id); }} accessibilityState={{ selected: on }}
                     style={[styles.venueChip, { borderColor: on ? C.primary : 'transparent' }]}>
-                    <View style={[styles.dot, { backgroundColor: CAT_META[v.cat].color }]}><Icon name={CAT_META[v.cat].icon} size={14} color="#FFF" strokeWidth={2} /></View>
+                    <View style={[styles.dot, { backgroundColor: CAT_META[v.cat].color }]}><Icon name={CAT_META[v.cat].icon} size={14} color={CAT_META[v.cat].on} strokeWidth={2} /></View>
                     <View style={{ maxWidth: 170 }}>
                       <T w="s" size={14} numberOfLines={1}>{v.name}</T>
                       <T size={12} color={C.text2} numberOfLines={1}>

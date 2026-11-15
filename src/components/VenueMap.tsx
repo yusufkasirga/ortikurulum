@@ -1,5 +1,7 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
+import Constants from 'expo-constants';
+import VenueMapOsm from './VenueMapOsm';
 import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps';
 import { C } from '../core/theme';
 import Icon from './Icon';
@@ -14,7 +16,14 @@ export type VenueMapProps = {
 };
 
 /** Native map: Apple Maps on iOS, Google Maps on Android (needs GOOGLE_MAPS_API_KEY at build time). */
-export default function VenueMap({ venues, selectedId, onSelect, bottomInset }: VenueMapProps) {
+const useOsm = Platform.OS === 'android' && !Constants.expoConfig?.extra?.hasMapsKey;
+
+/** Apple Maps on iOS; Google Maps on Android when a key was built in, otherwise OpenStreetMap. */
+export default function VenueMap(props: VenueMapProps) {
+  return useOsm ? <VenueMapOsm {...props} /> : <NativeVenueMap {...props} />;
+}
+
+function NativeVenueMap({ venues, selectedId, onSelect, bottomInset }: VenueMapProps) {
   const ref = React.useRef<MapView>(null);
 
   React.useEffect(() => {
@@ -36,7 +45,7 @@ export default function VenueMap({ venues, selectedId, onSelect, bottomInset }: 
       onPress={(e) => { if (e.nativeEvent.action !== 'marker-press') onSelect(undefined); }}
     >
       {venues.map((v) => (
-        <VenuePin key={v.id} v={v} selected={v.id === selectedId} onPress={() => onSelect(v.id)} />
+        <VenuePin key={`${v.id}-${v.id === selectedId ? 's' : 'n'}`} v={v} selected={v.id === selectedId} onPress={() => onSelect(v.id)} />
       ))}
     </MapView>
   );
@@ -45,7 +54,7 @@ export default function VenueMap({ venues, selectedId, onSelect, bottomInset }: 
 function VenuePin({ v, selected, onPress }: { v: Venue; selected: boolean; onPress: () => void }) {
   // Custom marker views must re-render once after mount (SVG), then stop tracking for performance.
   const [track, setTrack] = React.useState(true);
-  React.useEffect(() => { setTrack(true); const t = setTimeout(() => setTrack(false), 600); return () => clearTimeout(t); }, [selected]);
+  React.useEffect(() => { const t = setTimeout(() => setTrack(false), 600); return () => clearTimeout(t); }, []);
   const meta = CAT_META[v.cat];
   const open = v.tables.reduce((n, t) => n + t.need, 0);
   const size = selected ? 46 : 36;
@@ -61,7 +70,7 @@ function VenuePin({ v, selected, onPress }: { v: Venue; selected: boolean; onPre
       <View style={{ padding: 6, alignItems: 'center', justifyContent: 'center' }}>
         {v.tables.length ? <View style={[styles.halo, { width: size + 12, height: size + 12, borderRadius: (size + 12) / 2 }]} /> : null}
         <View style={[styles.pin, { width: size, height: size, borderRadius: size / 2, backgroundColor: meta.color, borderWidth: selected || v.featured ? 3 : 2, borderColor: v.featured ? '#FFC83D' : '#FFFFFF' }]}>
-          <Icon name={meta.icon} color="#FFFFFF" size={selected ? 24 : 19} strokeWidth={2} />
+          <Icon name={meta.icon} color={meta.on} size={selected ? 24 : 19} strokeWidth={2} />
         </View>
         {open ? (
           <View style={styles.badge}><T w="b" size={11} color="#FFFFFF">{open}</T></View>

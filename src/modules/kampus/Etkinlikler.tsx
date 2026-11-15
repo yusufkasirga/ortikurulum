@@ -2,9 +2,10 @@ import React from 'react';
 import { ScrollView, View } from 'react-native';
 import { C } from '../../core/theme';
 import Icon from '../../components/Icon';
-import { Avatar, Card, PrimaryButton, Sep, T, Tap, Toggle, tapLight, tapSuccess } from '../../components/ui';
+import { T, Tap, tapSuccess } from '../../components/ui';
 import { styles } from './styles';
 import { EVENTS } from './data';
+import { track } from '../../core/analytics';
 
 export default function Etkinlikler() {
   const [going, setGoing] = React.useState<Record<string, boolean>>({});
@@ -33,7 +34,7 @@ export default function Etkinlikler() {
                 <T w="b" size={13} color="#FFF">{e.free ? 'Ücretsiz' : 'Masa ücreti var'}</T>
               </View>
               <T w="x" size={20} color="#FFF" style={{ letterSpacing: -0.4 }}>{e.title}</T>
-              <T w="s" size={13} color="rgba(255,255,255,0.92)">{e.club}</T>
+              <T w="s" size={13} color="#FFFFFF">{e.club}</T>
             </View>
             <View style={{ padding: 14, gap: 10 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
@@ -46,7 +47,7 @@ export default function Etkinlikler() {
                 <Tap haptic="medium" onPress={() => setGoing((x) => ({ ...x, [e.id]: !g }))} accessibilityState={{ selected: g }} style={[styles.evBtn, { backgroundColor: g ? C.green : C.tint }]}>
                   <T w="s" size={14} color={g ? '#FFF' : C.primary}>{g ? 'Gidiyorsun' : 'Gidiyorum'}</T>
                 </Tap>
-                <Tap haptic="medium" onPress={() => { tapSuccess(); setBuddy((x) => ({ ...x, [e.id]: !b })); setGoing((x) => ({ ...x, [e.id]: true })); }} accessibilityState={{ selected: b }} style={[styles.evBtn, { flex: 1.3, backgroundColor: b ? C.text : C.sun }]}>
+                <Tap haptic="medium" onPress={() => { tapSuccess(); if (!b) track('etkinlik_birlikte', { etkinlik: e.id }); setBuddy((x) => ({ ...x, [e.id]: !b })); setGoing((x) => ({ ...x, [e.id]: true })); }} accessibilityState={{ selected: b }} style={[styles.evBtn, { flex: 1.3, backgroundColor: b ? C.text : C.sun }]}>
                   <T w="b" size={14} color={b ? '#FFF' : '#241200'}>{b ? 'Eşleşme aranıyor…' : 'Birlikte gidelim'}</T>
                 </Tap>
               </View>

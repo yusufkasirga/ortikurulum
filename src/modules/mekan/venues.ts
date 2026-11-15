@@ -51,13 +51,17 @@ export type Venue = {
   tables: OpenTable[];
 };
 
-export const CAT_META: Record<VenueCat, { label: string; color: string; tint: string; ink: string; icon: 'tiles' | 'gamepad' | 'cue' | 'cup' | 'ball' | 'bowling' }> = {
-  okey: { label: 'Okey salonu', color: '#14A44D', tint: '#E1F7E8', ink: '#0B5C2B', icon: 'tiles' },
-  playstation: { label: 'PlayStation', color: '#6D4AFF', tint: '#ECE7FF', ink: '#3A1FB0', icon: 'gamepad' },
-  bilardo: { label: 'Bilardo', color: '#1E293B', tint: '#E4E8EF', ink: '#1E293B', icon: 'cue' },
-  kafe: { label: 'Kafe · kutu oyunu', color: '#F2711C', tint: '#FFEBDC', ink: '#8A3A05', icon: 'cup' },
-  halisaha: { label: 'Halı saha', color: '#0EA5A4', tint: '#DBF5F4', ink: '#05605F', icon: 'ball' },
-  bowling: { label: 'Bowling', color: '#E8398A', tint: '#FDE3EF', ink: '#8A1450', icon: 'bowling' },
+/**
+ * Category palette. `color` is the fill, `on` the text/icon colour on that fill (≥7:1, WCAG AAA),
+ * `tint`/`ink` the soft chip pair (≥7:1). Bright fills use dark ink so the app stays playful and AAA.
+ */
+export const CAT_META: Record<VenueCat, { label: string; color: string; on: string; tint: string; ink: string; icon: 'tiles' | 'gamepad' | 'cue' | 'cup' | 'ball' | 'bowling' }> = {
+  okey: { label: 'Okey salonu', color: '#0C642F', on: '#FFFFFF', tint: '#E1F7E8', ink: '#0B5C2B', icon: 'tiles' },
+  playstation: { label: 'PlayStation', color: '#4C21FF', on: '#FFFFFF', tint: '#ECE7FF', ink: '#3A1FB0', icon: 'gamepad' },
+  bilardo: { label: 'Bilardo', color: '#1E293B', on: '#FFFFFF', tint: '#E4E8EF', ink: '#1E293B', icon: 'cue' },
+  kafe: { label: 'Kafe · kutu oyunu', color: '#FF8A3D', on: '#2A1000', tint: '#FFEBDC', ink: '#853805', icon: 'cup' },
+  halisaha: { label: 'Halı saha', color: '#2DD4BF', on: '#022C26', tint: '#DBF5F4', ink: '#055958', icon: 'ball' },
+  bowling: { label: 'Bowling', color: '#FF6FAE', on: '#2A0016', tint: '#FDE3EF', ink: '#8A1450', icon: 'bowling' },
 };
 
 export const SMOKING_LABEL: Record<Smoking, string> = {

@@ -5,6 +5,7 @@ import { C, F } from '../../core/theme';
 import Icon from '../../components/Icon';
 import { Avatar, Card, PrimaryButton, SectionLabel, Sep, T, Tap, Toggle, tapLight, tapSuccess } from '../../components/ui';
 import type { ScreenProps } from '../../core/navigation';
+import { track } from '../../core/analytics';
 
 const REASONS = [
   { id: 'noshow', label: 'Gelmedi / son anda iptal etti', sub: 'Masayı eksik bıraktı' },
@@ -105,11 +106,11 @@ export default function Sikayet({ navigation, route }: ScreenProps<'Sikayet'>) {
           <Toggle value={block} onChange={setBlock} label="Bu kişiyi engelle" />
         </Card>
         <T size={13} color={C.text2} style={{ marginHorizontal: 16, lineHeight: 18 }}>
-          Şikayeti kimin yaptığı karşı tarafa gösterilmez. Acil bir tehlike varsa önce 112'yi ara.
+          Şikayeti kimin yaptığı karşı tarafa gösterilmez. Acil bir tehlike varsa önce 112’yi ara.
         </T>
       </ScrollView>
       <View style={[styles.footer, { paddingBottom: insets.bottom + 14 }]}>
-        <PrimaryButton title="Şikayeti gönder" color={C.red} onPress={() => { tapSuccess(); setDone(true); }} />
+        <PrimaryButton title="Şikayeti gönder" color={C.red} onPress={() => { tapSuccess(); setDone(true); track('sikayet', { neden: reason, engelle: block }); }} />
       </View>
     </View>
   );

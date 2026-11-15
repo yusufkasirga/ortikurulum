@@ -10,7 +10,9 @@
       "supportsTablet": false,
       "bundleIdentifier": "app.orti.mobile",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSCameraUsageDescription": "Masadaki QR kodu okutup check-in yapmak ve kimlik doğrulaması için kamera kullanılır.",
+        "NSLocationWhenInUseUsageDescription": "Yakındaki masaları göstermek ve mekâna vardığında check-in yapabilmek için konumun kullanılır."
       }
     },
     "android": {
@@ -37,8 +39,29 @@
           "backgroundColor": "#FFFFFF",
           "resizeMode": "contain"
         }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#401FE2"
+        }
       ]
     ],
-    "scheme": "orti"
+    "scheme": "orti",
+    "owner": "mirrormedya",
+    "extra": {
+      "eas": {
+        "projectId": "dc3e923d-b379-4e6a-aedd-c09f9665cfd7"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/dc3e923d-b379-4e6a-aedd-c09f9665cfd7",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
+    }
   }
 }

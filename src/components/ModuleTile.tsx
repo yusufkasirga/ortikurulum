@@ -15,7 +15,7 @@ export default function ModuleTile({ m, width, onPress, badge }: { m: AppModule;
       </View>
       <View style={{ flex: 1 }} />
       <T w="b" size={14} color={m.ink} numberOfLines={2} style={{ lineHeight: 17 }}>{m.title}</T>
-      <T w="m" size={11} color={m.ink} numberOfLines={1} style={{ opacity: 0.85 }}>{m.sub}</T>
+      <T w="m" size={11} color={m.ink} numberOfLines={1}>{m.sub}</T>
       {badge ? <View style={styles.badge}><T w="b" size={11} color="#FFFFFF">{badge}</T></View> : null}
     </Tap>
   );

@@ -10,7 +10,7 @@ export const KIND_COLOR: Record<Note['kind'], { bg: string; ink: string }> = {
   'El yazısı': { bg: '#DBF5F4', ink: '#05605F' },
 };
 
-const FALLBACK = ['#6D4AFF', '#F2711C', '#0EA5A4', '#E8398A', '#14A44D'];
+const FALLBACK = ['#4C21FF', '#B21100', '#086363', '#AA1459', '#0C642F'];
 
 /** Course accent colour: the user's timetable colour if it is one of their courses, else a stable fallback. */
 export function courseColor(code: string) {

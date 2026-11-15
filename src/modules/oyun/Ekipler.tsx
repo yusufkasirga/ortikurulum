@@ -23,7 +23,7 @@ export default function Ekipler({ navigation }: ScreenProps<'Ekipler'>) {
           <View style={[styles.head, { backgroundColor: t.color }]}>
             <View style={styles.deco} />
             <T w="x" size={20} color="#FFF" style={{ letterSpacing: -0.4 }}>{t.name}</T>
-            <T w="s" size={13} color="rgba(255,255,255,0.9)">{t.game} · {t.usual}</T>
+            <T w="s" size={13} color="#FFFFFF">{t.game} · {t.usual}</T>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
               {t.members.map((m, i) => (
                 <View key={m.name} style={{ marginLeft: i ? -10 : 0 }}><Avatar i={m.i} bg={m.bg} size={38} border /></View>

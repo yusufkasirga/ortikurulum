@@ -19,7 +19,7 @@ export default function Lig({ navigation }: ScreenProps<'Lig'>) {
         <View style={[styles.hero, { paddingTop: insets.top + 4 }]}>
           <View style={styles.deco1} /><View style={styles.deco2} />
           <View style={{ marginLeft: -8 }}><NavBack label="Geri" color="#FFFFFF" onPress={() => navigation.goBack()} /></View>
-          <T w="b" size={13} color="rgba(255,255,255,0.85)">{LEAGUE.season}</T>
+          <T w="b" size={13} color="#FFFFFF">{LEAGUE.season}</T>
           <T w="x" size={30} color="#FFF" style={{ letterSpacing: -0.8 }} accessibilityRole="header">{LEAGUE.name}</T>
           <View style={styles.prize}><Icon name="star" size={16} color="#241200" fill="#241200" /><T w="b" size={13} color="#241200" style={{ flex: 1 }}>{LEAGUE.prize}</T></View>
 
@@ -30,7 +30,7 @@ export default function Lig({ navigation }: ScreenProps<'Lig'>) {
                 <View key={r.name} style={{ alignItems: 'center', gap: 6, flex: 1 }}>
                   <Avatar i={r.name.split(' ').map((x) => x[0]).join('')} bg={BG[r.rank - 1]} size={i === 1 ? 58 : 48} border />
                   <T w="b" size={13} color="#FFF" numberOfLines={1}>{r.name}</T>
-                  <View style={[styles.step, { height: h, backgroundColor: i === 1 ? C.sun : 'rgba(255,255,255,0.22)' }]}>
+                  <View style={[styles.step, { height: h, backgroundColor: i === 1 ? C.sun : 'rgba(0,0,0,0.25)' }]}>
                     <T w="x" size={22} color={i === 1 ? '#241200' : '#FFF'}>{r.rank}</T>
                     <T w="s" size={11} color={i === 1 ? '#241200' : '#FFF'}>{r.points} puan</T>
                   </View>
@@ -74,7 +74,7 @@ export default function Lig({ navigation }: ScreenProps<'Lig'>) {
 }
 
 const styles = StyleSheet.create({
-  hero: { backgroundColor: '#14A44D', paddingHorizontal: 20, paddingBottom: 0, gap: 6, overflow: 'hidden' },
+  hero: { backgroundColor: '#0C642F', paddingHorizontal: 20, paddingBottom: 0, gap: 6, overflow: 'hidden' },
   deco1: { position: 'absolute', width: 220, height: 220, borderRadius: 110, right: -80, top: -60, backgroundColor: 'rgba(255,255,255,0.12)' },
   deco2: { position: 'absolute', width: 120, height: 120, borderRadius: 60, left: -40, top: 140, backgroundColor: 'rgba(255,255,255,0.08)' },
   prize: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: C.sun, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 9, marginTop: 6 },

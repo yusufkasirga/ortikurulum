@@ -7,6 +7,7 @@ import { Card, NavBack, SectionLabel, Sep, T, Toggle } from '../../components/ui
 import { MODULES, ModuleGroup } from '../../core/modules';
 import { useSession } from '../../core/store';
 import type { ScreenProps } from '../../core/navigation';
+import { track } from '../../core/analytics';
 
 const GROUPS: ModuleGroup[] = ['Oyun & sosyal', 'Kampüs', 'Hesap'];
 
@@ -38,7 +39,7 @@ export default function Moduller({ navigation }: ScreenProps<'Moduller'>) {
                     <T w="s" size={16}>{m.title}</T>
                     <T size={13} color={C.text2}>{m.locked ? 'Temel modül · hep açık' : m.sub}</T>
                   </View>
-                  {m.locked ? <Icon name="lock" size={18} color={C.gray} /> : <Toggle value={!!modules[m.id]} onChange={() => toggleModule(m.id)} label={m.title} />}
+                  {m.locked ? <Icon name="lock" size={18} color={C.gray} /> : <Toggle value={!!modules[m.id]} onChange={() => { track(modules[m.id] ? 'modul_kapat' : 'modul_ac', { modul: m.id }); toggleModule(m.id); }} label={m.title} />}
                 </View>
               </View>
             ))}

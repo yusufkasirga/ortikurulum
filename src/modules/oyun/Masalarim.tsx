@@ -3,9 +3,8 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { C } from '../../core/theme';
 import Icon from '../../components/Icon';
-import { Card, GameTile, SectionLabel, Sep, T, Tap } from '../../components/ui';
+import { Card, GameTile, NavBack, SectionLabel, Sep, T, Tap } from '../../components/ui';
 import type { ScreenProps } from '../../core/navigation';
-import { NavBack } from '../../components/ui';
 
 export default function Masalarim({ navigation }: ScreenProps<'Masalarim'>) {
   const insets = useSafeAreaInsets();
@@ -19,7 +18,7 @@ export default function Masalarim({ navigation }: ScreenProps<'Masalarim'>) {
         <SectionLabel>Yaklaşan</SectionLabel>
         <Tap onPress={() => root.navigate('Sohbet')} style={styles.upcoming}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-            <GameTile mark="O" bg="#1F8A4C" size={52} />
+            <GameTile mark="O" bg="#0C642F" size={52} />
             <View style={{ flex: 1, gap: 2 }}>
               <T w="b" size={18}>101 Okey</T>
               <T size={14} color={C.text2}>Arena Premium Okey · Bugün 21:30</T>
@@ -38,7 +37,7 @@ export default function Masalarim({ navigation }: ScreenProps<'Masalarim'>) {
         <SectionLabel>Puan bekleyen</SectionLabel>
         <Card>
           <Tap onPress={() => root.navigate('Degerlendir')} style={styles.row}>
-            <GameTile mark="K" bg="#A35200" size={40} />
+            <GameTile mark="K" bg="#7A4100" size={40} />
             <View style={{ flex: 1 }}>
               <T w="s" size={16}>Catan</T>
               <T size={13} color={C.text2}>Latibule Coffee · Dün</T>
@@ -61,7 +60,7 @@ export default function Masalarim({ navigation }: ScreenProps<'Masalarim'>) {
           </View>
           <Sep inset={68} />
           <View style={styles.row}>
-            <GameTile mark="H" bg="#C25E00" size={40} />
+            <GameTile mark="H" bg="#086363" size={40} />
             <View style={{ flex: 1 }}>
               <T w="s" size={16}>Halı saha · 7v7</T>
               <T size={13} color={C.text2}>Pazar 19:00 · 11/14</T>

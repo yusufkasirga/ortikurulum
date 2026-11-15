@@ -5,6 +5,7 @@ import Svg, { Circle } from 'react-native-svg';
 import { C } from '../../core/theme';
 import Icon from '../../components/Icon';
 import { Avatar, Chip, GameTile, Logo, NavBack, PrimaryButton, SectionLabel, Segmented, T, Tap, tapSuccess } from '../../components/ui';
+import { track } from '../../core/analytics';
 import type { ScreenProps } from '../../core/navigation';
 
 const GAMES: [string, string][] = [
@@ -29,19 +30,19 @@ export default function HizliEsles({ navigation }: ScreenProps<'HizliEsles'>) {
 
   React.useEffect(() => {
     if (stage !== 'search') return;
-    const t = setTimeout(() => { tapSuccess(); setSecs(TOTAL); setStage('found'); }, 2400);
+    const t = setTimeout(() => { tapSuccess(); setSecs(TOTAL); setStage('found'); track('eslesme_bulundu'); }, 2400);
     return () => clearTimeout(t);
   }, [stage]);
 
   React.useEffect(() => {
     if (stage !== 'found') return;
-    const i = setInterval(() => setSecs((s) => s - 1), 1000);
+    let left = TOTAL;
+    const i = setInterval(() => {
+      left -= 1;
+      if (left <= 0) { setStage('search'); setSecs(TOTAL); } else setSecs(left);
+    }, 1000);
     return () => clearInterval(i);
   }, [stage]);
-
-  React.useEffect(() => {
-    if (stage === 'found' && secs <= 0) setStage('search');
-  }, [secs, stage]);
 
   return (
     <View style={{ flex: 1, backgroundColor: C.bg, paddingTop: insets.top }}>
@@ -78,7 +79,7 @@ export default function HizliEsles({ navigation }: ScreenProps<'HizliEsles'>) {
             </View>
           </ScrollView>
           <View style={[styles.footer, { paddingBottom: insets.bottom + 14 }]}>
-            <PrimaryButton title="Eşleşme ara" disabled={chosen.length === 0} onPress={() => setStage('search')} />
+            <PrimaryButton title="Eşleşme ara" disabled={chosen.length === 0} onPress={() => { track('hizli_esles_ara', { oyun_sayisi: chosen.length }); setStage('search'); }} />
           </View>
         </>
       ) : null}
@@ -108,7 +109,7 @@ export default function HizliEsles({ navigation }: ScreenProps<'HizliEsles'>) {
             </View>
             <View style={styles.matchCard}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-                <GameTile mark="O" bg="#1F8A4C" size={56} />
+                <GameTile mark="O" bg="#0C642F" size={56} />
                 <View style={{ gap: 2 }}>
                   <T w="b" size={20}>101 Okey</T>
                   <T size={14} color={C.text2}>Arena Premium Okey · Mevlana · Partner</T>
@@ -145,8 +146,8 @@ export default function HizliEsles({ navigation }: ScreenProps<'HizliEsles'>) {
 }
 
 function Searching({ summary, onCancel }: { summary: string; onCancel: () => void }) {
-  const a = React.useRef(new Animated.Value(0)).current;
-  const b = React.useRef(new Animated.Value(0)).current;
+  const a = React.useState(() => new Animated.Value(0))[0];
+  const b = React.useState(() => new Animated.Value(0))[0];
   React.useEffect(() => {
     let stopped = false;
     let loops: Animated.CompositeAnimation[] = [];

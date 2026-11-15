@@ -14,7 +14,7 @@ const FEATURES: { icon: IconName; title: string; sub: string }[] = [
 
 export default function Hosgeldin({ navigation }: ScreenProps<'Hosgeldin'>) {
   const insets = useSafeAreaInsets();
-  const enter = () => navigation.reset({ index: 0, routes: [{ name: 'Tabs' }] });
+
   return (
     <View style={[styles.root, { paddingTop: insets.top + 32, paddingBottom: insets.bottom + 20 }]}>
       <View style={{ flex: 1, gap: 28 }}>
@@ -40,10 +40,10 @@ export default function Hosgeldin({ navigation }: ScreenProps<'Hosgeldin'>) {
         </View>
       </View>
       <View style={{ gap: 10 }}>
-        <PrimaryButton title="Apple ile devam et" color="#000000" onPress={enter} />
-        <PrimaryButton title="Telefon numarasıyla devam et" color={C.bg} textColor={C.text} onPress={enter} />
+        <PrimaryButton title="Apple ile devam et" color="#000000" onPress={() => navigation.navigate('Kayit', { method: 'apple' })} />
+        <PrimaryButton title="Telefon numarasıyla devam et" color={C.bg} textColor={C.text} onPress={() => navigation.navigate('Kayit', { method: 'telefon' })} />
         <T size={12} color={C.text2} style={{ textAlign: 'center', marginTop: 6, lineHeight: 17 }}>
-          Devam ederek Kullanım Koşulları ve Topluluk Kuralları'nı kabul edersin.
+          Devam ederek Kullanım Koşulları ve Topluluk Kuralları’nı kabul edersin. Kişisel verilerin KVKK Aydınlatma Metni’ne göre işlenir.
         </T>
       </View>
     </View>
